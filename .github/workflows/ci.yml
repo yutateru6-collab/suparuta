@@ -1,30 +1,80 @@
 name: CI
-
 on:
   push:
     branches: [main]
   pull_request:
     branches: [main]
-
+  workflow_dispatch:
 permissions:
-  contents: read
-
+  contents: write
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   verify:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version-file: .node-version
           cache: npm
           cache-dependency-path: package.json
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Typecheck and build
+      - name: Install dependencies (bootstrap lockfile once)
+        id: install
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci
+          else
+            npm install
+            echo 'created_lock=true' >> "$GITHUB_OUTPUT"
+          fi
+      - name: Strict types, unit regressions, production build
         run: npm run check
+      - name: Dependency vulnerability audit
+        run: npm audit --audit-level=high
+      - name: Install browser engines
+        run: npx playwright install --with-deps chromium webkit
+      - name: Browser regressions (desktop, mobile, WebKit)
+        run: npm run test:e2e
+      - name: Publish inspectable browser evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: browser-evidence
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 14
+      - name: Publish Cloudflare Pages build
+        uses: actions/upload-artifact@v4
+        with:
+          name: cloudflare-pages-dist
+          path: dist/
+          retention-days: 14
+      - name: Package exact source and dependency lock for inspection
+        if: always()
+        run: |
+          mkdir -p /tmp/verified-source
+          npm audit --json > audit-current.json || true
+          tar --exclude=.git --exclude=node_modules --exclude=dist --exclude=playwright-report --exclude=test-results -czf /tmp/verified-source/source-with-lock.tgz .
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: verified-source-and-lock
+          path: /tmp/verified-source/
+          retention-days: 7
+      - name: Preserve tested lockfile on an isolated branch for review
+        if: success() && github.event_name == 'push' && steps.install.outputs.created_lock == 'true'
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git switch -c "ci/verified-lock-${GITHUB_RUN_ID}"
+          git add package-lock.json
+          git commit -m 'build: lock dependencies verified by regression suite'
+          git push origin HEAD
+      - name: Explain test scope
+        run: |
+          echo '## Verification scope' >> "$GITHUB_STEP_SUMMARY"
+          echo 'Tests exercise prompt construction, pasted/reviewed JSON, parser, playback, clipboard error handling, storage and responsive UI. They do not call an LLM API or prove future generated translations correct. Static artifact generation is not a Cloudflare deployment.' >> "$GITHUB_STEP_SUMMARY"

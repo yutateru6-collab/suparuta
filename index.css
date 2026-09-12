@@ -1,0 +1,18 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+:root { color-scheme: dark; }
+html, body, #root { min-height: 100%; margin: 0; background: #0f0f13; color: #e0e0e0; }
+button, input, textarea { font: inherit; }
+button:focus-visible, input:focus-visible, textarea:focus-visible, a:focus-visible { outline: 3px solid #00f0ff; outline-offset: 3px; }
+.reader-shell { display: flex; flex-direction: column; min-height: 100vh; min-height: 100dvh; }
+.reader-stage { flex: 1; min-height: 220px; }
+.reader-text { overflow-wrap: anywhere; word-break: normal; white-space: normal; }
+.reader-controls { padding-bottom: max(1.25rem, env(safe-area-inset-bottom)); }
+.reader-dialog { width: calc(100% - 2rem); max-width: 48rem; max-height: calc(100vh - 2rem); max-height: calc(100dvh - 2rem); overflow-y: auto; }
+.reader-dialog::backdrop { background: rgb(0 0 0 / .75); }
+@layer components {
+  .control { @apply min-h-11 rounded-lg border border-gray-600 bg-spartan-gray text-gray-200 inline-flex items-center justify-center font-medium transition-colors disabled:opacity-40 disabled:cursor-not-allowed; }
+  .control:hover:not(:disabled), .control[aria-pressed="true"] { @apply border-spartan-neon text-spartan-neon; }
+}
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
