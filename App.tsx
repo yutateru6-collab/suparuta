@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Chunk, WPM, AppState } from "./types";
 import { parseTextLocal } from "./services/localParser";
+import { buildChunkPrompt } from "./services/chunkPrompt";
 import { ReaderCanvas } from "./components/ReaderCanvas";
 import { SpeedSelector } from "./components/SpeedSelector";
 import { Button } from "./components/Button";
@@ -62,21 +63,7 @@ const App: React.FC = () => {
   const copyAIPrompt = () => {
     const textToEmbed =
       inputText.trim() || "[ここにあなたの英文を貼り付けてください]";
-    const promptText = `以下の英文を、意味の固まり（1〜7単語程度）に分割し、JSON形式の配列で出力してください。余計な説明や\`\`\`jsonなどのマークダウン装飾は一切含めず、純粋なJSON配列データのみを出力してください。
-
-【出力フォーマット】
-[
-  { "en": "意味の固まりの英文", "jp": "その部分の日本語訳（可能であれば直訳に近い形で）", "speaker": null },
-  ...
-]
-
-【分割ルール】
-- 1つの要素（en）は最大7単語までにしてください。
-- 接続詞、前置詞、関係代名詞、カンマやピリオドなどの区切りを意識して、自然な意味の固まりに分割してください。
-- 日本語訳（jp）は、その部分だけの直訳に近い、戻り読みをしない自然な訳にしてください。
-
-【対象の英文】
-${textToEmbed}`;
+    const promptText = buildChunkPrompt(textToEmbed);
 
     navigator.clipboard.writeText(promptText);
     setCopiedPrompt(true);
@@ -186,9 +173,11 @@ ${textToEmbed}`;
       setAppState("READING");
     } catch (err) {
       console.error(err);
-      setError(
-        "処理に失敗しました。入力データ（JSONやテキスト）に誤りがないかご確認ください。",
-      );
+      const message =
+        err instanceof Error && err.message
+          ? err.message
+          : "処理に失敗しました。入力データ（JSONやテキスト）に誤りがないかご確認ください。";
+      setError(message);
       setAppState("INPUT");
     } finally {
       setIsLoading(false);
@@ -457,4 +446,3 @@ ${textToEmbed}`;
 };
 
 export default App;
-
