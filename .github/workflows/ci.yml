@@ -6,7 +6,7 @@ on:
     branches: [main]
   workflow_dispatch:
 permissions:
-  contents: write
+  contents: read
 concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
@@ -20,16 +20,7 @@ jobs:
         with:
           node-version-file: .node-version
           cache: npm
-          cache-dependency-path: package.json
-      - name: Install dependencies (bootstrap lockfile once)
-        id: install
-        run: |
-          if [ -f package-lock.json ]; then
-            npm ci
-          else
-            npm install
-            echo 'created_lock=true' >> "$GITHUB_OUTPUT"
-          fi
+      - run: npm ci
       - name: Strict types, unit regressions, production build
         run: npm run check
       - name: Dependency vulnerability audit
@@ -53,28 +44,16 @@ jobs:
           name: cloudflare-pages-dist
           path: dist/
           retention-days: 14
-      - name: Package exact source and dependency lock for inspection
+      - name: Archive machine-readable dependency audit
         if: always()
-        run: |
-          mkdir -p /tmp/verified-source
-          npm audit --json > audit-current.json || true
-          tar --exclude=.git --exclude=node_modules --exclude=dist --exclude=playwright-report --exclude=test-results -czf /tmp/verified-source/source-with-lock.tgz .
+        run: npm audit --json > audit-current.json || true
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: verified-source-and-lock
-          path: /tmp/verified-source/
-          retention-days: 7
-      - name: Preserve tested lockfile on an isolated branch for review
-        if: success() && github.event_name == 'push' && steps.install.outputs.created_lock == 'true'
-        run: |
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git switch -c "ci/verified-lock-${GITHUB_RUN_ID}"
-          git add package-lock.json
-          git commit -m 'build: lock dependencies verified by regression suite'
-          git push origin HEAD
+          name: dependency-audit
+          path: audit-current.json
+          retention-days: 14
       - name: Explain test scope
         run: |
           echo '## Verification scope' >> "$GITHUB_STEP_SUMMARY"
-          echo 'Tests exercise prompt construction, pasted/reviewed JSON, parser, playback, clipboard error handling, storage and responsive UI. They do not call an LLM API or prove future generated translations correct. Static artifact generation is not a Cloudflare deployment.' >> "$GITHUB_STEP_SUMMARY"
+          echo 'Tests cover prompt construction, pasted/reviewed JSON, parser, playback, clipboard error handling, storage and responsive UI. They do not call an LLM API or prove future generated translations correct. Static artifact generation is not a Cloudflare deployment.' >> "$GITHUB_STEP_SUMMARY"

@@ -55,12 +55,14 @@ export const ReaderCanvas: React.FC<ReaderCanvasProps> = ({ chunks, wpm, onFinis
     const keydown = (event: KeyboardEvent) => {
       if (event.ctrlKey || event.metaKey || event.altKey || event.isComposing || event.repeat) return;
       if (isSettingsOpen || isReviewOpen) return;
+      if (event.code === 'Escape') { event.preventDefault(); onReset(); return; }
       const target = event.target as HTMLElement | null;
-      if (target?.closest('input,textarea,select,button,a,[contenteditable="true"],dialog')) return;
+      if (target?.closest('input,textarea,select,[contenteditable="true"],dialog')) return;
+      // Space activates a focused native button/link; do not double-trigger it.
+      if (event.code === 'Space' && target?.closest('button,a')) return;
       if (event.code === 'Space') { event.preventDefault(); togglePlay(); }
       if (event.code === 'ArrowLeft') { event.preventDefault(); jumpToFrame(frameIndex - 1); }
       if (event.code === 'ArrowRight') { event.preventDefault(); nextFrame(); }
-      if (event.code === 'Escape') { event.preventDefault(); onReset(); }
       if (event.code === 'KeyR') { event.preventDefault(); restart(); }
     };
     window.addEventListener('keydown', keydown);
@@ -104,7 +106,7 @@ export const ReaderCanvas: React.FC<ReaderCanvasProps> = ({ chunks, wpm, onFinis
       <p className="text-sm text-gray-300">表示単位を変えても、読んでいた単語を含む位置を保ちます。</p>
     </Dialog>
     <Dialog open={isReviewOpen} title={`チャンクふりかえり（全${frames.length}件）`} onClose={() => setIsReviewOpen(false)}>
-      <p className="text-sm text-gray-300">選んだ位置で一時停止します。再開ボタンで続きを読めます。</p><div className="space-y-3">{frames.map((frame, index) => <button key={index} className="w-full text-left p-4 bg-spartan-black rounded-xl border border-gray-700 hover:border-spartan-neon space-y-2" onClick={() => { jumpToFrame(index); setIsReviewOpen(false); }}><p className="text-xs text-spartan-neon">{index + 1}</p><p lang="en" className="text-lg break-words">{frame.text}</p>{frame.chunk.jp && <p className="text-base text-gray-300 break-words">{wordGroupSize > 0 ? '元チャンクの訳：' : ''}{frame.chunk.jp}</p>}</button>)}</div>
+      <p className="text-sm text-gray-300">選んだ位置で一時停止します。再開ボタンで続きを読めます。</p><div className="space-y-3" data-testid="review-rows">{isReviewOpen && frames.map((frame, index) => <button key={index} className="w-full text-left p-4 bg-spartan-black rounded-xl border border-gray-700 hover:border-spartan-neon space-y-2" onClick={() => { jumpToFrame(index); setIsReviewOpen(false); }}><p className="text-xs text-spartan-neon">{index + 1}</p><p lang="en" className="text-lg break-words">{frame.text}</p>{frame.chunk.jp && <p className="text-base text-gray-300 break-words">{wordGroupSize > 0 ? '元チャンクの訳：' : ''}{frame.chunk.jp}</p>}</button>)}</div>
     </Dialog>
   </div>;
 };
