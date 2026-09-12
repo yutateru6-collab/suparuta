@@ -1,86 +1,85 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Spartan Reader AI</title>
+    <meta
+      name="description"
+      content="意味のかたまりごとに英文を表示し、戻り読みを減らすための英語リーディング練習アプリ。"
+    />
+    <meta name="color-scheme" content="dark" />
+    <title>SPARTAN READER</title>
+
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
     <script>
       tailwind.config = {
         theme: {
           extend: {
             fontFamily: {
-              sans: ['Inter', 'sans-serif'],
-              mono: ['JetBrains Mono', 'monospace'],
+              sans: ["Inter", "sans-serif"],
+              mono: ["JetBrains Mono", "monospace"],
             },
             colors: {
               spartan: {
-                black: '#0f0f13',
-                gray: '#1e1e24',
-                red: '#ff2a4d',
-                neon: '#00f0ff',
-                text: '#e0e0e0'
-              }
+                black: "#0f0f13",
+                gray: "#1e1e24",
+                red: "#ff2a4d",
+                neon: "#00f0ff",
+                text: "#e0e0e0",
+              },
             },
             animation: {
-              'reveal-fade': 'revealFade 0.2s ease-out forwards',
-              'reveal-flash': 'revealFlash 0.2s ease-out forwards',
-              'reveal-blur': 'revealBlur 0.3s ease-out forwards',
-              'reveal-zoom': 'revealZoom 0.2s ease-out forwards',
+              "reveal-fade": "revealFade 0.2s ease-out forwards",
+              "reveal-flash": "revealFlash 0.2s ease-out forwards",
+              "reveal-blur": "revealBlur 0.3s ease-out forwards",
+              "reveal-zoom": "revealZoom 0.2s ease-out forwards",
             },
             keyframes: {
               revealFade: {
-                '0%': { opacity: '0' },
-                '100%': { opacity: '1' },
+                "0%": { opacity: "0" },
+                "100%": { opacity: "1" },
               },
               revealFlash: {
-                '0%': { opacity: '0', filter: 'brightness(3) saturate(1.5)' },
-                '50%': { opacity: '0.8', filter: 'brightness(1.5) saturate(1.2)' },
-                '100%': { opacity: '1', filter: 'brightness(1) saturate(1)' },
+                "0%": { opacity: "0", filter: "brightness(3) saturate(1.5)" },
+                "50%": { opacity: "0.8", filter: "brightness(1.5) saturate(1.2)" },
+                "100%": { opacity: "1", filter: "brightness(1) saturate(1)" },
               },
               revealBlur: {
-                '0%': { opacity: '0', filter: 'blur(8px)' },
-                '100%': { opacity: '1', filter: 'blur(0)' },
+                "0%": { opacity: "0", filter: "blur(8px)" },
+                "100%": { opacity: "1", filter: "blur(0)" },
               },
               revealZoom: {
-                '0%': { opacity: '0', transform: 'scale(1.1)' },
-                '100%': { opacity: '1', transform: 'scale(1)' },
-              }
-            }
+                "0%": { opacity: "0", transform: "scale(1.1)" },
+                "100%": { opacity: "1", transform: "scale(1)" },
+              },
+            },
           },
         },
-      }
+      };
     </script>
     <style>
       body {
+        margin: 0;
         background-color: #0f0f13;
         color: #e0e0e0;
       }
-      /* Hide scrollbar for clean UI */
+
       .no-scrollbar::-webkit-scrollbar {
         display: none;
       }
+
       .no-scrollbar {
         -ms-overflow-style: none;
         scrollbar-width: none;
       }
     </style>
-  <script type="importmap">
-{
-  "imports": {
-    "react/": "https://aistudiocdn.com/react@^19.2.0/",
-    "react": "https://aistudiocdn.com/react@^19.2.0",
-    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
-    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.30.0",
-    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.554.0"
-  }
-}
-</script>
-<link rel="stylesheet" href="/index.css">
-</head>
+  </head>
   <body>
     <div id="root"></div>
-  <script type="module" src="/index.tsx"></script>
-</body>
+    <script type="module" src="/index.tsx"></script>
+  </body>
 </html>
