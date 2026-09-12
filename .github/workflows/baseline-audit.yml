@@ -1,0 +1,31 @@
+name: Baseline audit
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/baseline-audit.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  baseline:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .node-version
+      - run: npm install
+      - run: npm run check
+      - name: Dependency audit (diagnostic, not a passing security gate)
+        run: npm audit --json > audit-baseline.json || true
+      - name: Package exact baseline and lockfile
+        run: |
+          mkdir -p /tmp/suparuta-baseline
+          tar --exclude=.git --exclude=node_modules --exclude=dist -czf /tmp/suparuta-baseline/source-with-lock.tgz .
+          cp audit-baseline.json /tmp/suparuta-baseline/
+      - uses: actions/upload-artifact@v4
+        with:
+          name: baseline-source-and-audit
+          path: /tmp/suparuta-baseline/
+          retention-days: 7
