@@ -9,6 +9,12 @@ import { SpeedSelector } from './components/SpeedSelector';
 import { Button } from './components/Button';
 import reviewedSample from './public/libraries-of-things.reviewed.json';
 
+const AI_SITES = [
+  { name: 'ChatGPT', url: 'https://chatgpt.com/' },
+  { name: 'Gemini', url: 'https://gemini.google.com/app' },
+  { name: 'Claude', url: 'https://claude.ai/' },
+] as const;
+
 const App: React.FC = () => {
   const [appState,setAppState]=useState<AppState>('INPUT');
   const [inputText,setInputText]=useState('');
@@ -78,6 +84,7 @@ const App: React.FC = () => {
         <button type="button" onClick={()=>fileInputRef.current?.click()} className="control px-3 gap-2 text-sm"><Upload size={16}/>ファイル選択</button>
         <input type="file" ref={fileInputRef} accept=".json,.txt" className="hidden" onChange={e=>{if(e.target.files?.[0])handleFile(e.target.files[0]);e.target.value='';}}/>
         <button type="button" onClick={copyAIPrompt} className="control px-3 gap-2 text-sm"><Cpu size={16}/>{copiedPrompt?'コピー完了！ ✓':'プロンプトコピー'}</button>
+        {AI_SITES.map(site=><a key={site.name} href={site.url} target="_blank" rel="noopener noreferrer" className="control px-3 text-sm" aria-label={`${site.name}を開く`}>{site.name}</a>)}
       </div></div>
       <div onDragOver={e=>{e.preventDefault();setIsDragging(true);}} onDragLeave={()=>setIsDragging(false)} onDrop={e=>{e.preventDefault();setIsDragging(false);if(e.dataTransfer.files[0])handleFile(e.dataTransfer.files[0]);}} className={`rounded-xl border-2 ${isDragging?'border-spartan-neon':'border-gray-700'} bg-spartan-gray`}>
         <textarea id="reading-input" value={inputText} onChange={e=>setInputText(e.target.value)} disabled={isLoading} placeholder="英文、または和訳付きJSONを貼り付けてください。JSON・TXTファイルも読み込めます。" className="w-full h-56 sm:h-64 bg-transparent p-4 rounded-xl text-lg text-white placeholder-gray-400 resize-y"/>
