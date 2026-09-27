@@ -1,3 +1,7 @@
+import '@fontsource/m-plus-rounded-1c/latin-400.css';
+import '@fontsource/m-plus-rounded-1c/latin-700.css';
+import '@fontsource/m-plus-rounded-1c/japanese-400.css';
+import '@fontsource/m-plus-rounded-1c/japanese-700.css';
 import './index.css';
 import React from 'react';
 import ReactDOM from 'react-dom/client';

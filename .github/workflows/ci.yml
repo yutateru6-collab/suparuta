@@ -56,4 +56,4 @@ jobs:
       - name: Explain test scope
         run: |
           echo '## Verification scope' >> "$GITHUB_STEP_SUMMARY"
-          echo 'Tests cover prompt construction, pasted/reviewed JSON, parser, playback, clipboard error handling, storage and responsive UI. They do not call an LLM API or prove future generated translations correct. Static artifact generation is not a Cloudflare deployment.' >> "$GITHUB_STEP_SUMMARY"
+          echo 'Tests cover both Quest and Classic modes, checkpoint and cosmetic reward behavior, prompt construction, pasted/reviewed JSON, parser, playback, clipboard error handling, storage and responsive UI. They do not call an LLM API or prove future generated translations correct. Static artifact generation is not a Cloudflare deployment.' >> "$GITHUB_STEP_SUMMARY"

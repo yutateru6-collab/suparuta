@@ -17,6 +17,7 @@ test.beforeEach(async ({ page }) => {
   // Production rendering must not depend on third-party scripts or fonts.
   await page.route('**/*', route => new URL(route.request().url()).hostname === '127.0.0.1' ? route.continue() : route.abort());
   await page.goto('/');
+  await page.getByRole('button',{name:'クラシック表示に切り替える',exact:true}).click();
 });
 test.afterEach(async ({ page }) => expect(pageErrors.get(page)).toEqual([]));
 
@@ -122,5 +123,5 @@ test('production build loads bundled CSS and exposes the deployed commit metadat
   const assets=await page.locator('link[rel=stylesheet]').evaluateAll(elements=>elements.map(el=>(el as HTMLLinkElement).href));
   expect(assets.some(url=>url.includes('/assets/')&&url.endsWith('.css'))).toBe(true);
   const res=await page.request.get('/build-info.json'); expect(res.ok()).toBe(true);
-  expect((await res.json()).version).toBe('0.2.0');
+  expect((await res.json()).version).toBe('0.3.0');
 });

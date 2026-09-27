@@ -5,6 +5,7 @@ const sample = JSON.parse(text);
 test.beforeEach(async({page})=>{
   await page.route('**/*', route => new URL(route.request().url()).hostname === '127.0.0.1' ? route.continue() : route.abort());
   await page.goto('/');
+  await page.getByRole('button',{name:'クラシック表示に切り替える',exact:true}).click();
   await page.getByLabel('英文テキスト').fill(text);
   await page.getByRole('button',{name:'チャンク読みを開始',exact:true}).click();
 });

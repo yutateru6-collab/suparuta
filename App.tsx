@@ -1,12 +1,15 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { BookOpen, Upload, Cpu, History, Star, Trash2, Gauge } from 'lucide-react';
+import { BookOpen, Upload, Cpu, History, Star, Trash2, Gauge, ArrowRight, Sparkles, FileText } from 'lucide-react';
 import { WPM, type Chunk, type AppState } from './types';
 import { parseReadingInput, getPromptSource } from './services/localParser';
 import { buildChunkPrompt } from './services/chunkPrompt';
 import { loadHistory, remember, HISTORY_KEY, type SavedItem } from './services/history';
 import { ReaderCanvas } from './components/ReaderCanvas';
+import { QuestReader } from './components/QuestReader';
+import { QuestMascot } from './components/QuestMascot';
 import { SpeedSelector } from './components/SpeedSelector';
 import { Button } from './components/Button';
+import { loadQuestProgress } from './services/quest';
 import reviewedSample from './public/libraries-of-things.reviewed.json';
 
 const AI_SITES = [
@@ -16,6 +19,9 @@ const AI_SITES = [
 ] as const;
 
 const App: React.FC = () => {
+  const [experience,setExperience]=useState<'quest'|'classic'>(()=>{
+    try{return localStorage.getItem('spartan_reader_experience')==='classic'?'classic':'quest';}catch{return 'quest';}
+  });
   const [appState,setAppState]=useState<AppState>('INPUT');
   const [inputText,setInputText]=useState('');
   const [wpm,setWpm]=useState<number>(WPM.NORMAL);
@@ -27,6 +33,7 @@ const App: React.FC = () => {
   const [isSpeedOpen,setIsSpeedOpen]=useState(true);
   const [isHistoryOpen,setIsHistoryOpen]=useState(false);
   const [initialHistory]=useState(loadHistory);
+  const [questSummary,setQuestSummary]=useState(loadQuestProgress);
   const [savedItems,setSavedItems]=useState<SavedItem[]>(initialHistory.items);
   const [storageWarning,setStorageWarning]=useState(initialHistory.warning);
   const [historyDirty,setHistoryDirty]=useState(false);
@@ -34,6 +41,10 @@ const App: React.FC = () => {
   const [promptFallback,setPromptFallback]=useState('');
   const fileInputRef=useRef<HTMLInputElement>(null);
   const copyTimer=useRef<ReturnType<typeof setTimeout>|null>(null);
+  const selectExperience=(next:'quest'|'classic')=>{
+    setExperience(next);
+    try{localStorage.setItem('spartan_reader_experience',next);}catch{/* The choice still works for this session. */}
+  };
   useEffect(()=>()=>{if(copyTimer.current)clearTimeout(copyTimer.current);},[]);
   useEffect(()=>{
     if(!historyDirty||!initialHistory.writable)return;
@@ -72,12 +83,47 @@ const App: React.FC = () => {
     }catch(err){setError(err instanceof Error?err.message:'入力を読み込めませんでした。');setAppState('INPUT');}
     finally{setIsLoading(false);}
   };
-  const handleReset=useCallback(()=>{setAppState('INPUT');setChunks([]);},[]);
+  const handleReset=useCallback(()=>{setAppState('INPUT');setChunks([]);setQuestSummary(loadQuestProgress());},[]);
   const handleFinish=useCallback(()=>setAppState('RESULT'),[]);
   const loadSavedItem=(item:SavedItem)=>{setInputText(item.text);setWpm(item.wpm);setError(null);};
   const preview=(text:string)=>{try{return getPromptSource(text).slice(0,70);}catch{return text.slice(0,70);}};
-  if(appState==='READING'||appState==='RESULT')return <ReaderCanvas chunks={chunks} wpm={wpm} onFinish={handleFinish} onReset={handleReset} notice={[readerNotice,storageWarning].filter(Boolean).join(' ')}/>;
+  if(appState==='READING'||appState==='RESULT')return experience==='quest'
+    ? <QuestReader chunks={chunks} wpm={wpm} onFinish={handleFinish} onReset={handleReset} notice={[readerNotice,storageWarning].filter(Boolean).join(' ')}/>
+    : <ReaderCanvas chunks={chunks} wpm={wpm} onFinish={handleFinish} onReset={handleReset} notice={[readerNotice,storageWarning].filter(Boolean).join(' ')}/>;
+  if(experience==='quest'){
+    const record=questSummary;
+    return <div className="quest-shell quest-home">
+      <div className="quest-home-wrap">
+        <header className="quest-home-header"><div className="quest-logo"><span className="quest-logo-mark">✦</span><span>SPARTAN <strong>QUEST</strong></span></div><button className="quest-classic-switch" onClick={()=>selectExperience('classic')}>クラシック表示に切り替える</button></header>
+        <main>
+          <section className="quest-hero">
+            <div className="quest-hero-copy"><p className="quest-eyebrow">READING ADVENTURE · 英文読解</p><h1>英文を読んで、<br/><span>ことばの冒険へ。</span></h1><p className="quest-hero-description">意味のまとまりを一つずつ読んで、キャラと一緒にゴールを目指そう。読み切った英文が、あなたの冒険になる。</p><div className="quest-hero-tags"><span>✦ 自分の英文で遊べる</span><span>✦ 和訳付き教材にも対応</span></div></div>
+            <div className="quest-hero-art" aria-hidden="true"><span className="quest-float quest-float-one">A</span><span className="quest-float quest-float-two">✦</span><span className="quest-float quest-float-three">GO!</span><div className="quest-hero-ring"><QuestMascot mood="happy" size="large" /></div><div className="quest-hero-ground" /></div>
+          </section>
+          <section className="quest-dashboard" aria-label="冒険の記録"><div><span className="quest-dash-icon">✦</span><p><strong>{record.progress.sparks}</strong><small>きらめき</small></p></div><div><span className="quest-dash-icon">★</span><p><strong>{record.progress.completed.length}</strong><small>クリアした英文</small></p></div><p className="quest-dashboard-caption">はじめの冒険を<br/>スタートしよう！</p></section>
+          {record.warning&&<p role="status" className="quest-notice">{record.warning}</p>}
+          <section className="quest-compose" aria-labelledby="quest-compose-title">
+            <div className="quest-compose-title"><div><p className="quest-eyebrow">NEW MISSION</p><h2 id="quest-compose-title">英文をセット</h2><p>英文を貼るだけでスタート。JSON教材なら、和訳も一緒に表示できます。</p></div><span className="quest-compose-step">01 / 02</span></div>
+            <label htmlFor="reading-input" className="quest-label"><FileText size={19}/> 英文テキスト</label>
+            <div className={`quest-input-wrap ${isDragging?'is-dragging':''}`} onDragOver={e=>{e.preventDefault();setIsDragging(true);}} onDragLeave={()=>setIsDragging(false)} onDrop={e=>{e.preventDefault();setIsDragging(false);if(e.dataTransfer.files[0])handleFile(e.dataTransfer.files[0]);}}>
+              <textarea id="reading-input" value={inputText} onChange={e=>setInputText(e.target.value)} disabled={isLoading} placeholder={'ここに英文を貼り付けよう！\n\n例：In many cities, libraries are changing their role...'} />
+            </div>
+            <div className="quest-input-actions"><button onClick={()=>fileInputRef.current?.click()}><Upload size={17}/> ファイルを選ぶ</button><input type="file" ref={fileInputRef} accept=".json,.txt" className="hidden" onChange={e=>{if(e.target.files?.[0])handleFile(e.target.files[0]);e.target.value='';}}/><button onClick={()=>{setInputText(JSON.stringify(reviewedSample,null,2));setError(null);}}><Sparkles size={17}/> 校閲済みサンプルを入れる</button></div>
+            <p className="quest-input-help">通常の英文は端末内の簡易ルールで分割し、和訳は付きません。意味チャンクと和訳を正確に使うには、確認済みのJSON教材を入力してください。</p>
+            <details className="quest-ai-tools"><summary><Cpu size={18}/> 和訳付き教材を作るためのプロンプト</summary><div><p>英文を入力してプロンプトをコピーし、外部AIでJSONを作成します。生成された英文の抜けと和訳は必ず確認してください。</p><button onClick={copyAIPrompt} className="quest-secondary">{copiedPrompt?'コピー完了！ ✓':'プロンプトコピー'}</button><div className="quest-ai-links">{AI_SITES.map(site=><a key={site.name} href={site.url} target="_blank" rel="noopener noreferrer" aria-label={`${site.name}を開く`}>{site.name} ↗</a>)}</div></div></details>
+            {promptFallback&&<textarea aria-label="手動コピー用プロンプト" readOnly value={promptFallback} onFocus={e=>e.currentTarget.select()} className="quest-prompt-fallback"/>}
+            <div className="quest-start-settings"><div><p className="quest-eyebrow">SPEED</p><h3>読む速さ <strong>{wpm} WPM</strong></h3></div><SpeedSelector selectedWpm={wpm} onSelect={setWpm} variant="quest"/></div>
+            {storageWarning&&<p role="status" className="quest-notice">{storageWarning}</p>}
+            {error&&<p role="alert" className="quest-error">{error}</p>}
+            <button className="quest-primary quest-start-button" onClick={handleProcess} disabled={!inputText.trim()||isLoading}>{isLoading?'準備中...':<>冒険をはじめる <ArrowRight size={23}/></>}</button>
+          </section>
+          {savedItems.length>0&&<section className="quest-history"><button onClick={()=>setIsHistoryOpen(!isHistoryOpen)} aria-expanded={isHistoryOpen}><History size={20}/> これまでの英文 ({savedItems.length}) <span>{isHistoryOpen?'閉じる':'開く'}</span></button>{isHistoryOpen&&<div className="quest-history-list">{savedItems.map(item=><div key={item.id}><button className="quest-history-item" onClick={()=>loadSavedItem(item)}><strong>{preview(item.text)}</strong><small>{item.wpm} WPM · {new Date(item.timestamp).toLocaleDateString('ja-JP')}</small></button><button aria-label={item.isFavorite?'お気に入りを解除':'お気に入りに登録'} aria-pressed={item.isFavorite} onClick={()=>{setHistoryDirty(true);setSavedItems(prev=>prev.map(row=>row.id===item.id?{...row,isFavorite:!row.isFavorite}:row));}}><Star size={19} fill={item.isFavorite?'currentColor':'none'}/></button><button aria-label="履歴を削除" onClick={()=>{setHistoryDirty(true);setSavedItems(prev=>prev.filter(row=>row.id!==item.id));}}><Trash2 size={19}/></button></div>)}</div>}</section>}
+        </main><footer className="quest-home-footer">SPARTAN QUEST · 英文を、前から読める力に。</footer>
+      </div>
+    </div>;
+  }
   return <div className="min-h-screen bg-spartan-black text-white px-4 py-8 sm:p-8 flex flex-col items-center justify-center font-sans"><div className="max-w-3xl w-full space-y-7">
+    <button type="button" className="control px-4 text-sm mx-auto" onClick={()=>selectExperience('quest')}>✦ クエスト表示に切り替える</button>
     <header className="text-center space-y-3"><h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight">SPARTAN <span className="text-spartan-neon">READER</span></h1><p className="text-gray-300">英文を前から、意味のまとまりごとに読む。</p></header>
     <section className="space-y-3">
       <div className="flex flex-wrap items-center justify-between gap-3"><label htmlFor="reading-input" className="font-bold text-gray-200 flex items-center gap-2"><BookOpen size={18} className="text-spartan-neon"/>英文テキスト</label><div className="flex flex-wrap gap-2">

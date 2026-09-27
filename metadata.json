@@ -1,6 +1,6 @@
 {
-  "name": "Spartan Reader",
-  "description": "A focused English reading trainer that chunks text locally and controls display speed by WPM to help reduce regression (re-reading).",
+  "name": "Spartan Quest / Reader",
+  "description": "A playful English reading quest with checkpoints, a mascot and a preserved classic reading mode. Plain English is split locally; reviewed JSON can add translations.",
   "requestFramePermissions": [],
   "majorCapabilities": []
 }
