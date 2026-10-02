@@ -13,6 +13,8 @@ import { loadQuestProgress } from './services/quest';
 import reviewedSample from './public/libraries-of-things.reviewed.json';
 import { ChunkPreview } from './components/ChunkPreview';
 import { useStoredState } from './services/useStoredState';
+import { ReadingRoutes } from './components/ReadingRoutes';
+import triviaSamples from './public/trivia-samples.json';
 import { DRAFT_KEY, SETTINGS_KEY, SESSION_KEY, decodeDraft, decodeSettings, decodeSession, defaultSettings, type ViewedRange } from './services/readingState';
 
 const AI_SITES = [
@@ -126,8 +128,13 @@ const App: React.FC = () => {
           </section>
           <section className="quest-dashboard" aria-label="冒険の記録"><div><span className="quest-dash-icon">✦</span><p><strong>{record.progress.sparks}</strong><small>きらめき</small></p></div><div><span className="quest-dash-icon">★</span><p><strong>{record.progress.completed.length}</strong><small>クリアした英文</small></p></div><p className="quest-dashboard-caption">はじめの冒険を<br/>スタートしよう！</p></section>
           {record.warning&&<p role="status" className="quest-notice">{record.warning}</p>}
+          <ReadingRoutes samples={triviaSamples} createTools={<>
+            <button type="button" onClick={copyAIPrompt} className="quest-secondary">{copiedPrompt?'コピー完了！ ✓':'プロンプトコピー'}</button>
+            <div className="quest-ai-links">{AI_SITES.map(site=><a key={site.name} href={site.url} target="_blank" rel="noopener noreferrer" aria-label={`${site.name}を開く`}>{site.name} ↗</a>)}</div>
+            {promptFallback&&<textarea aria-label="手動コピー用プロンプト" readOnly value={promptFallback} onFocus={e=>e.currentTarget.select()} className="quest-prompt-fallback"/>}
+          </>}/>
           <section className="quest-compose" aria-labelledby="quest-compose-title">
-            <div className="quest-compose-title"><div><p className="quest-eyebrow">NEW MISSION</p><h2 id="quest-compose-title">英文をセット</h2><p>英文を貼るだけでスタート。JSON教材なら、和訳も一緒に表示できます。</p></div><span className="quest-compose-step">01 / 02</span></div>
+            <div className="quest-compose-title"><div><p className="quest-eyebrow">READY TO READ</p><h2 id="quest-compose-title">ここに貼り付けて、読む</h2><p>コピーしたサンプルJSONや、自分で用意した英文・JSONを貼り付けてください。</p></div></div>
             <label htmlFor="reading-input" className="quest-label"><FileText size={19}/> 英文テキスト</label>
             {savedControls}
             <div className={`quest-input-wrap ${isDragging?'is-dragging':''}`} onDragOver={e=>{e.preventDefault();setIsDragging(true);}} onDragLeave={()=>setIsDragging(false)} onDrop={e=>{e.preventDefault();setIsDragging(false);if(e.dataTransfer.files[0])handleFile(e.dataTransfer.files[0]);}}>
@@ -136,8 +143,6 @@ const App: React.FC = () => {
             <div className="quest-input-actions"><button onClick={()=>fileInputRef.current?.click()}><Upload size={17}/> ファイルを選ぶ</button><input type="file" ref={fileInputRef} accept=".json,.txt" className="hidden" onChange={e=>{if(e.target.files?.[0])handleFile(e.target.files[0]);e.target.value='';}}/><button onClick={()=>{setInputText(JSON.stringify(reviewedSample,null,2));setError(null);}}><Sparkles size={17}/> 校閲済みサンプルを入れる</button></div>
             <p className="quest-input-help">通常の英文は端末内の簡易ルールで分割し、和訳は付きません。意味チャンクと和訳を正確に使うには、確認済みのJSON教材を入力してください。</p>
             <ChunkPreview text={inputText} onApply={setInputText}/>
-            <details className="quest-ai-tools"><summary><Cpu size={18}/> 和訳付き教材を作るためのプロンプト</summary><div><p>英文を入力してプロンプトをコピーし、外部AIでJSONを作成します。生成された英文の抜けと和訳は必ず確認してください。</p><button onClick={copyAIPrompt} className="quest-secondary">{copiedPrompt?'コピー完了！ ✓':'プロンプトコピー'}</button><div className="quest-ai-links">{AI_SITES.map(site=><a key={site.name} href={site.url} target="_blank" rel="noopener noreferrer" aria-label={`${site.name}を開く`}>{site.name} ↗</a>)}</div></div></details>
-            {promptFallback&&<textarea aria-label="手動コピー用プロンプト" readOnly value={promptFallback} onFocus={e=>e.currentTarget.select()} className="quest-prompt-fallback"/>}
             <div className="quest-start-settings"><div><p className="quest-eyebrow">SPEED</p><h3>読む速さ <strong>{wpm} WPM</strong></h3></div><SpeedSelector selectedWpm={wpm} onSelect={setWpm} variant="quest"/></div>
             {storageWarning&&<p role="status" className="quest-notice">{storageWarning}</p>}
             {error&&<p role="alert" className="quest-error">{error}</p>}

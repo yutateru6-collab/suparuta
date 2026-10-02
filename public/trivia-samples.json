@@ -1,0 +1,907 @@
+[
+  {
+    "id": "01-wombat-cubes",
+    "title": "うんちがサイコロ形？",
+    "englishTitle": "The Tiny Cube Factory",
+    "description": "やわらかい体から、なぜ角のあるうんちが？ 腸に隠れた不思議な仕組み。",
+    "category": "動物",
+    "wordCount": 101,
+    "sourceText": "A wombat has a surprising talent: it produces cube-shaped poop. These Australian animals leave their droppings on rocks and other noticeable places. The droppings help them communicate with other wombats. But how does a soft body make cubes? Scientists studied the intestines of common wombats and found sections with different levels of stiffness. As the muscles squeeze and the waste dries, the unusual walls help form flat sides and corners. The shape develops inside the intestine, before the poop leaves the body. Researchers still have questions about why this ability evolved. For now, nature's little factory still has a few secrets.",
+    "chunks": [
+      {
+        "en": "A wombat has a surprising talent:",
+        "jp": "ウォンバットには、意外な特技があります。",
+        "speaker": null
+      },
+      {
+        "en": "it produces cube-shaped poop.",
+        "jp": "立方体のうんちをするのです。",
+        "speaker": null
+      },
+      {
+        "en": "These Australian animals leave their droppings",
+        "jp": "オーストラリアにすむこの動物は、ふんを置いていきます。",
+        "speaker": null
+      },
+      {
+        "en": "on rocks and other noticeable places.",
+        "jp": "岩の上など、目立つ場所に。",
+        "speaker": null
+      },
+      {
+        "en": "The droppings help them communicate with other wombats.",
+        "jp": "そのふんは、ほかのウォンバットに情報を伝える役に立ちます。",
+        "speaker": null
+      },
+      {
+        "en": "But how does a soft body make cubes?",
+        "jp": "でも、柔らかい体で、どうやって立方体を作るのでしょうか。",
+        "speaker": null
+      },
+      {
+        "en": "Scientists studied the intestines of common wombats",
+        "jp": "科学者たちは、ヒメウォンバットの腸を調べました。",
+        "speaker": null
+      },
+      {
+        "en": "and found sections with different levels of stiffness.",
+        "jp": "すると、硬さの異なる部分が見つかりました。",
+        "speaker": null
+      },
+      {
+        "en": "As the muscles squeeze and the waste dries,",
+        "jp": "筋肉が収縮し、ふんが乾いていくにつれて、",
+        "speaker": null
+      },
+      {
+        "en": "the unusual walls help form flat sides and corners.",
+        "jp": "その特殊な腸の壁が、平らな面や角を作る助けになります。",
+        "speaker": null
+      },
+      {
+        "en": "The shape develops inside the intestine,",
+        "jp": "その形は、腸の中でできあがります。",
+        "speaker": null
+      },
+      {
+        "en": "before the poop leaves the body.",
+        "jp": "ふんが体の外に出る前に。",
+        "speaker": null
+      },
+      {
+        "en": "Researchers still have questions about why this ability evolved.",
+        "jp": "この能力がなぜ進化したのかについては、まだ謎が残っています。",
+        "speaker": null
+      },
+      {
+        "en": "For now, nature's little factory still has a few secrets.",
+        "jp": "今のところ、自然の小さな工場には、まだいくつか秘密が残っています。",
+        "speaker": null
+      }
+    ],
+    "sources": [
+      {
+        "publisher": "University of Tasmania",
+        "title": "Scientists get to the bottom of wombat cubed poo mystery",
+        "url": "https://www.utas.edu.au/about/news-and-stories/articles/2021/1109-scientists-get-to-the-bottom-of-wombat-cubed-poo-mystery"
+      }
+    ]
+  },
+  {
+    "id": "02-octopus-taste",
+    "title": "さわると味がわかる腕",
+    "englishTitle": "Dinner at Your Fingertips",
+    "description": "さわっただけで、食べ物かどうかの手がかりがわかる。タコの腕のすごい能力。",
+    "category": "動物",
+    "wordCount": 104,
+    "sourceText": "Imagine finding out what is for dinner simply by touching it. An octopus can do something like that. Its arms are covered with suckers, and these contain special cells that detect chemicals on the surfaces they touch. This gives the animal a kind of taste through touch. The system is useful when an arm explores a dark hole where a possible meal may be hiding. A rock and a crab can provide different chemical clues. The octopus can use these clues to help decide what to grab. For us, hands and tongues have different jobs. For an octopus, exploring and tasting can happen together.",
+    "chunks": [
+      {
+        "en": "Imagine finding out what is for dinner",
+        "jp": "夕食が何なのか確かめるところを、想像してください。",
+        "speaker": null
+      },
+      {
+        "en": "simply by touching it.",
+        "jp": "ただ、それにさわるだけで。",
+        "speaker": null
+      },
+      {
+        "en": "An octopus can do something like that.",
+        "jp": "タコには、それに似たことができます。",
+        "speaker": null
+      },
+      {
+        "en": "Its arms are covered with suckers,",
+        "jp": "タコの腕は、吸盤でおおわれています。",
+        "speaker": null
+      },
+      {
+        "en": "and these contain special cells",
+        "jp": "そして、その吸盤には特殊な細胞があります。",
+        "speaker": null
+      },
+      {
+        "en": "that detect chemicals on the surfaces they touch.",
+        "jp": "さわった物の表面にある化学物質を感知する細胞です。",
+        "speaker": null
+      },
+      {
+        "en": "This gives the animal a kind of taste through touch.",
+        "jp": "これにより、タコはさわることで、一種の味を感じられます。",
+        "speaker": null
+      },
+      {
+        "en": "The system is useful when an arm explores a dark hole",
+        "jp": "この仕組みは、腕で暗い穴を探るときに役立ちます。",
+        "speaker": null
+      },
+      {
+        "en": "where a possible meal may be hiding.",
+        "jp": "えさになりそうな生き物が隠れているかもしれない穴で。",
+        "speaker": null
+      },
+      {
+        "en": "A rock and a crab can provide different chemical clues.",
+        "jp": "岩とカニからは、異なる化学的な手がかりが得られます。",
+        "speaker": null
+      },
+      {
+        "en": "The octopus can use these clues",
+        "jp": "タコは、その手がかりを使えます。",
+        "speaker": null
+      },
+      {
+        "en": "to help decide what to grab.",
+        "jp": "何をつかむか判断する助けとして。",
+        "speaker": null
+      },
+      {
+        "en": "For us, hands and tongues have different jobs.",
+        "jp": "私たちにとって、手と舌の役割は違います。",
+        "speaker": null
+      },
+      {
+        "en": "For an octopus, exploring and tasting can happen together.",
+        "jp": "タコなら、探ることと味わうことを、同時にできるのです。",
+        "speaker": null
+      }
+    ],
+    "sources": [
+      {
+        "publisher": "Harvard University",
+        "title": "Touch and taste? It’s all in the suckers",
+        "url": "https://news.harvard.edu/gazette/story/2020/10/octopus-suction-cups-hold-its-taste-and-touch-sensors/"
+      }
+    ]
+  },
+  {
+    "id": "03-venus-calendar",
+    "title": "金星の時計は超のんびり",
+    "englishTitle": "Venus Is in No Hurry",
+    "description": "一年が、自転一回よりも短い星。「一日」の意味まで変わる金星の時間。",
+    "category": "宇宙",
+    "wordCount": 101,
+    "sourceText": "Earth spins many times during one trip around the Sun. Venus follows a very different schedule. It takes about 225 Earth days to complete one journey around the Sun. Yet one full spin takes about 243 Earth days. In other words, its year ends before it finishes turning once. This is why people say that a day on Venus is longer than its year. However, that statement uses a full spin to define a day. The time between two sunrises is different. Venus also spins in the opposite direction to Earth. Even a familiar word like \"day\" needs care in space.",
+    "chunks": [
+      {
+        "en": "Earth spins many times",
+        "jp": "地球は、何度も自転します。",
+        "speaker": null
+      },
+      {
+        "en": "during one trip around the Sun.",
+        "jp": "太陽の周りを一周する間に。",
+        "speaker": null
+      },
+      {
+        "en": "Venus follows a very different schedule.",
+        "jp": "金星は、それとはまったく違うペースで動いています。",
+        "speaker": null
+      },
+      {
+        "en": "It takes about 225 Earth days",
+        "jp": "地球の日数で約225日かかります。",
+        "speaker": null
+      },
+      {
+        "en": "to complete one journey around the Sun.",
+        "jp": "太陽の周りを一周するのに。",
+        "speaker": null
+      },
+      {
+        "en": "Yet one full spin takes about 243 Earth days.",
+        "jp": "ところが、自転一回には、地球の日数で約243日かかるのです。",
+        "speaker": null
+      },
+      {
+        "en": "In other words, its year ends",
+        "jp": "言いかえれば、金星では一年が終わります。",
+        "speaker": null
+      },
+      {
+        "en": "before it finishes turning once.",
+        "jp": "一回転し終わるより先に。",
+        "speaker": null
+      },
+      {
+        "en": "This is why people say",
+        "jp": "だから、人々はこう言うのです。",
+        "speaker": null
+      },
+      {
+        "en": "that a day on Venus is longer than its year.",
+        "jp": "金星では、一日が一年よりも長いと。",
+        "speaker": null
+      },
+      {
+        "en": "However, that statement uses a full spin to define a day.",
+        "jp": "ただし、その言い方では、自転一回を一日としています。",
+        "speaker": null
+      },
+      {
+        "en": "The time between two sunrises is different.",
+        "jp": "日の出から次の日の出までの時間は、それとは違います。",
+        "speaker": null
+      },
+      {
+        "en": "Venus also spins in the opposite direction to Earth.",
+        "jp": "金星は、自転の向きも地球と反対です。",
+        "speaker": null
+      },
+      {
+        "en": "Even a familiar word like \"day\" needs care in space.",
+        "jp": "「一日」という身近な言葉でさえ、宇宙では注意が必要なのです。",
+        "speaker": null
+      }
+    ],
+    "sources": [
+      {
+        "publisher": "NASA",
+        "title": "Venus: Facts",
+        "url": "https://science.nasa.gov/venus/venus-facts/"
+      },
+      {
+        "publisher": "NASA Goddard Space Flight Center",
+        "title": "StarChild: The planet Venus",
+        "url": "https://starchild.gsfc.nasa.gov/docs/StarChild/solar_system_level2/venus.html"
+      },
+      {
+        "publisher": "NASA Technical Reports Server",
+        "title": "Orbit and Rotation of Venus",
+        "url": "https://ntrs.nasa.gov/api/citations/19780020162/downloads/19780020162.pdf?attachment=true"
+      }
+    ]
+  },
+  {
+    "id": "04-eiffel-stretch",
+    "title": "エッフェル塔も背伸びする",
+    "englishTitle": "A Tower That Stretches",
+    "description": "パリの名物も、暑い日は少し背伸び。太陽と金属が生む、見えない動き。",
+    "category": "世界",
+    "wordCount": 95,
+    "sourceText": "The Eiffel Tower may look completely still, but its size changes with the weather. When its iron gets warmer, it expands. This makes the tower slightly taller. When the metal cools, it contracts again. Sunshine can produce another surprising effect. The sunny side warms more than the shaded sides, so the tower can lean a little away from the Sun. These small movements are normal and do not mean the tower is becoming unsafe. Visitors cannot notice them just by watching. The tower does not need muscles to do a little stretching in the sunshine.",
+    "chunks": [
+      {
+        "en": "The Eiffel Tower may look completely still,",
+        "jp": "エッフェル塔は、まったく動かないように見えるかもしれません。",
+        "speaker": null
+      },
+      {
+        "en": "but its size changes with the weather.",
+        "jp": "でも、その大きさは天候によって変わります。",
+        "speaker": null
+      },
+      {
+        "en": "When its iron gets warmer, it expands.",
+        "jp": "塔の鉄は、温まると膨張します。",
+        "speaker": null
+      },
+      {
+        "en": "This makes the tower slightly taller.",
+        "jp": "そのため、塔は少し高くなります。",
+        "speaker": null
+      },
+      {
+        "en": "When the metal cools, it contracts again.",
+        "jp": "鉄が冷えると、再び縮みます。",
+        "speaker": null
+      },
+      {
+        "en": "Sunshine can produce another surprising effect.",
+        "jp": "日差しは、もう一つ意外な変化を起こすことがあります。",
+        "speaker": null
+      },
+      {
+        "en": "The sunny side warms more than the shaded sides,",
+        "jp": "日が当たる側は、日陰の側よりも温まるため、",
+        "speaker": null
+      },
+      {
+        "en": "so the tower can lean a little away from the Sun.",
+        "jp": "塔が、太陽と反対の方向へわずかに傾くことがあるのです。",
+        "speaker": null
+      },
+      {
+        "en": "These small movements are normal",
+        "jp": "こうした小さな動きは、ごく自然なものです。",
+        "speaker": null
+      },
+      {
+        "en": "and do not mean the tower is becoming unsafe.",
+        "jp": "塔が危険になりつつあるという意味ではありません。",
+        "speaker": null
+      },
+      {
+        "en": "Visitors cannot notice them just by watching.",
+        "jp": "見ているだけでは、訪れた人はその動きに気づきません。",
+        "speaker": null
+      },
+      {
+        "en": "The tower does not need muscles",
+        "jp": "塔に筋肉は必要ありません。",
+        "speaker": null
+      },
+      {
+        "en": "to do a little stretching in the sunshine.",
+        "jp": "日差しの中で、ちょっと背伸びするのに。",
+        "speaker": null
+      }
+    ],
+    "sources": [
+      {
+        "publisher": "Société d’Exploitation de la Tour Eiffel",
+        "title": "Why does the Eiffel Tower change size?",
+        "url": "https://www.toureiffel.paris/en/news/history-and-culture/why-does-eiffel-tower-change-size"
+      }
+    ]
+  },
+  {
+    "id": "05-bubble-wrap",
+    "title": "壁紙がプチプチに転職？",
+    "englishTitle": "Wallpaper with a Second Career",
+    "description": "荷物を守るあのプチプチは、もともと壁紙になるはずだった？",
+    "category": "発明",
+    "wordCount": 101,
+    "sourceText": "Imagine decorating your bedroom with sheets of plastic bubbles. That strange idea was the beginning of Bubble Wrap. In 1957, two inventors tried to create a new wallpaper. They joined plastic sheets together, leaving pockets of air between them. The result did not become a popular wall decoration. However, its air bubbles had another useful job to do. They could cushion objects during shipping. The material later helped protect IBM computers on their journeys to customers. What failed as decoration succeeded as packaging. The story offers a useful lesson: an invention can be valuable even when its first plan goes nowhere.",
+    "chunks": [
+      {
+        "en": "Imagine decorating your bedroom with sheets of plastic bubbles.",
+        "jp": "寝室を、気泡の入ったプラスチックのシートで飾るところを想像してください。",
+        "speaker": null
+      },
+      {
+        "en": "That strange idea was the beginning of Bubble Wrap.",
+        "jp": "その変わった発想が、バブルラップの始まりでした。",
+        "speaker": null
+      },
+      {
+        "en": "In 1957, two inventors tried to create a new wallpaper.",
+        "jp": "1957年、二人の発明家が、新しい壁紙を作ろうとしました。",
+        "speaker": null
+      },
+      {
+        "en": "They joined plastic sheets together,",
+        "jp": "二人は、プラスチックのシートを貼り合わせ、",
+        "speaker": null
+      },
+      {
+        "en": "leaving pockets of air between them.",
+        "jp": "間に空気のふくらみを残しました。",
+        "speaker": null
+      },
+      {
+        "en": "The result did not become a popular wall decoration.",
+        "jp": "できあがった物は、人気の壁飾りにはなりませんでした。",
+        "speaker": null
+      },
+      {
+        "en": "However, its air bubbles had another useful job to do.",
+        "jp": "しかし、その気泡には、別の役立つ仕事がありました。",
+        "speaker": null
+      },
+      {
+        "en": "They could cushion objects during shipping.",
+        "jp": "輸送中の品物を、衝撃から守ることができたのです。",
+        "speaker": null
+      },
+      {
+        "en": "The material later helped protect IBM computers",
+        "jp": "その素材は、後にIBMのコンピューターを守るのに役立ちました。",
+        "speaker": null
+      },
+      {
+        "en": "on their journeys to customers.",
+        "jp": "顧客のもとへ運ばれる途中で。",
+        "speaker": null
+      },
+      {
+        "en": "What failed as decoration succeeded as packaging.",
+        "jp": "飾りとして失敗した物が、包装材として成功したのです。",
+        "speaker": null
+      },
+      {
+        "en": "The story offers a useful lesson:",
+        "jp": "この話は、役立つ教訓を示しています。",
+        "speaker": null
+      },
+      {
+        "en": "an invention can be valuable",
+        "jp": "発明は、価値を持つことがあります。",
+        "speaker": null
+      },
+      {
+        "en": "even when its first plan goes nowhere.",
+        "jp": "最初の計画が、うまくいかなかったとしても。",
+        "speaker": null
+      }
+    ],
+    "sources": [
+      {
+        "publisher": "Sealed Air",
+        "title": "BUBBLE WRAP Brand Packaging Solutions",
+        "url": "https://www.sealedair.com/products/brand/bubble-wrap"
+      },
+      {
+        "publisher": "Sealed Air",
+        "title": "Our History",
+        "url": "https://jobs.sealedair.com/content/Our-History/?locale=en_US"
+      }
+    ]
+  },
+  {
+    "id": "06-hooks-from-nature",
+    "title": "くっつく種から大発明",
+    "englishTitle": "The Annoying Seeds That Helped",
+    "description": "服や犬の毛についた、とげのある実。小さな困りごとが留め具のヒントに。",
+    "category": "発明",
+    "wordCount": 103,
+    "sourceText": "After an outdoor trip, most people remove seeds from their clothes and forget about them. Swiss engineer George de Mestral did something different. In 1941, burrs stuck to his clothes and his dog's fur. He examined them under a microscope. Their tiny hooks caught on fibers, allowing the burrs to hold on without glue. He wondered if people could copy this trick. After years of work, he developed a fastener with hooks on one side and loops on the other. Press the sides together, and they stick. Pull them apart, and they open. Those irritating little hitchhikers had provided a surprisingly practical design.",
+    "chunks": [
+      {
+        "en": "After an outdoor trip, most people remove seeds from their clothes",
+        "jp": "屋外へ出かけたあと、たいていの人は服についた種を取り、",
+        "speaker": null
+      },
+      {
+        "en": "and forget about them.",
+        "jp": "そのまま忘れてしまいます。",
+        "speaker": null
+      },
+      {
+        "en": "Swiss engineer George de Mestral did something different.",
+        "jp": "スイスの技師、ジョルジュ・ド・メストラルは違いました。",
+        "speaker": null
+      },
+      {
+        "en": "In 1941, burrs stuck to his clothes and his dog's fur.",
+        "jp": "1941年、とげのある実が、彼の服や犬の毛にくっつきました。",
+        "speaker": null
+      },
+      {
+        "en": "He examined them under a microscope.",
+        "jp": "彼は、それを顕微鏡で調べました。",
+        "speaker": null
+      },
+      {
+        "en": "Their tiny hooks caught on fibers,",
+        "jp": "小さなかぎ状の部分が繊維に引っかかり、",
+        "speaker": null
+      },
+      {
+        "en": "allowing the burrs to hold on without glue.",
+        "jp": "実が、接着剤なしでくっついていられるようになっていたのです。",
+        "speaker": null
+      },
+      {
+        "en": "He wondered if people could copy this trick.",
+        "jp": "彼は、この仕組みを人間にもまねできないかと考えました。",
+        "speaker": null
+      },
+      {
+        "en": "After years of work,",
+        "jp": "何年も研究を重ねた末、",
+        "speaker": null
+      },
+      {
+        "en": "he developed a fastener with hooks on one side",
+        "jp": "片側にかぎ状の突起がある留め具を開発しました。",
+        "speaker": null
+      },
+      {
+        "en": "and loops on the other.",
+        "jp": "もう片側には、輪がありました。",
+        "speaker": null
+      },
+      {
+        "en": "Press the sides together, and they stick.",
+        "jp": "両側を押し合わせると、くっつきます。",
+        "speaker": null
+      },
+      {
+        "en": "Pull them apart, and they open.",
+        "jp": "引き離すと、開きます。",
+        "speaker": null
+      },
+      {
+        "en": "Those irritating little hitchhikers had provided a surprisingly practical design.",
+        "jp": "あの迷惑な小さな便乗者が、意外にも実用的な仕組みを教えてくれたのです。",
+        "speaker": null
+      }
+    ],
+    "sources": [
+      {
+        "publisher": "Velcro Companies",
+        "title": "How George de Mestral Invented the VELCRO Brand Fastener",
+        "url": "https://www.velcro.com/news-and-blog/2026/02/an-idea-that-stuck-how-george-de-mestral-invented-the-velcro-fastener/"
+      },
+      {
+        "publisher": "Velcro Companies",
+        "title": "Our Timeline of Innovation",
+        "url": "https://www.velcro.com/original-thinking/our-timeline-of-innovation/"
+      }
+    ]
+  },
+  {
+    "id": "07-popcorn-pressure",
+    "title": "おやつの中の圧力鍋",
+    "englishTitle": "A Snack Under Pressure",
+    "description": "一粒の中で水蒸気が大活躍。はじける粒と、はじけない粒の秘密。",
+    "category": "食べ物",
+    "wordCount": 105,
+    "sourceText": "A popcorn kernel looks dry and quiet. Inside, however, it holds a little water and plenty of starch. When the kernel gets hot, some of that water becomes steam. The strong outer shell traps steam, allowing pressure to build up, much like a tiny pressure cooker. Eventually, the shell breaks open. The soft, heated starch quickly expands, creating the light shape we recognize as popcorn. Why do a few kernels remain stubbornly closed? One possible reason is damage to the shell. If moisture escapes too early, enough pressure may never build up. Even this simple snack needs the right conditions to make a dramatic entrance.",
+    "chunks": [
+      {
+        "en": "A popcorn kernel looks dry and quiet.",
+        "jp": "ポップコーンの粒は、乾いていて、何も起こりそうに見えません。",
+        "speaker": null
+      },
+      {
+        "en": "Inside, however, it holds a little water and plenty of starch.",
+        "jp": "ところが中には、少しの水分と、たくさんのでんぷんがあります。",
+        "speaker": null
+      },
+      {
+        "en": "When the kernel gets hot,",
+        "jp": "粒が熱くなると、",
+        "speaker": null
+      },
+      {
+        "en": "some of that water becomes steam.",
+        "jp": "その水分の一部が、水蒸気になります。",
+        "speaker": null
+      },
+      {
+        "en": "The strong outer shell traps steam, allowing pressure to build up,",
+        "jp": "丈夫な外側の皮が水蒸気を閉じ込め、内部の圧力が高まります。",
+        "speaker": null
+      },
+      {
+        "en": "much like a tiny pressure cooker.",
+        "jp": "まるで、小さな圧力鍋のように。",
+        "speaker": null
+      },
+      {
+        "en": "Eventually, the shell breaks open.",
+        "jp": "やがて、その皮が破れます。",
+        "speaker": null
+      },
+      {
+        "en": "The soft, heated starch quickly expands,",
+        "jp": "熱で柔らかくなったでんぷんが、急速に膨らみ、",
+        "speaker": null
+      },
+      {
+        "en": "creating the light shape we recognize as popcorn.",
+        "jp": "私たちが知っている、軽いポップコーンの形になります。",
+        "speaker": null
+      },
+      {
+        "en": "Why do a few kernels remain stubbornly closed?",
+        "jp": "では、なぜ、いくつかの粒は頑固に開かないのでしょうか。",
+        "speaker": null
+      },
+      {
+        "en": "One possible reason is damage to the shell.",
+        "jp": "考えられる理由の一つは、皮の傷です。",
+        "speaker": null
+      },
+      {
+        "en": "If moisture escapes too early,",
+        "jp": "水分が早く逃げすぎると、",
+        "speaker": null
+      },
+      {
+        "en": "enough pressure may never build up.",
+        "jp": "十分な圧力が、結局かからないことがあります。",
+        "speaker": null
+      },
+      {
+        "en": "Even this simple snack needs the right conditions",
+        "jp": "こんなシンプルなおやつでも、適切な条件が必要なのです。",
+        "speaker": null
+      },
+      {
+        "en": "to make a dramatic entrance.",
+        "jp": "華やかに登場するためには。",
+        "speaker": null
+      }
+    ],
+    "sources": [
+      {
+        "publisher": "Purdue University College of Agriculture",
+        "title": "What’s under the shell of this popular snack?",
+        "url": "https://ag.purdue.edu/news/2020/02/whats-under-the-shell-of-this-popular-snack.html"
+      }
+    ]
+  },
+  {
+    "id": "08-flamingo-colors",
+    "title": "そのピンク、食事のおかげ",
+    "englishTitle": "Wearing Your Lunch",
+    "description": "フラミンゴのピンクは食事から。逆さまのくちばしで集める、色の材料。",
+    "category": "動物",
+    "wordCount": 107,
+    "sourceText": "If flamingos chose clothes, pink would seem like an obvious favorite. Their famous color, however, comes from food. They eat algae and small animals such as brine shrimp. These foods contain natural pigments called carotenoids. The birds process these pigments, and the color becomes part of their feathers. The way they get food is unusual, too. A flamingo lowers its head into the water with its bill upside down. Its tongue helps move water through the bill. Special structures along the edges trap food while the water flows out. For a flamingo, a meal does more than fill its stomach. It helps create the bird's entire look.",
+    "chunks": [
+      {
+        "en": "If flamingos chose clothes, pink would seem like an obvious favorite.",
+        "jp": "フラミンゴが服を選ぶなら、ピンクが大のお気に入りに見えるでしょう。",
+        "speaker": null
+      },
+      {
+        "en": "Their famous color, however, comes from food.",
+        "jp": "でも、あの有名な色は、食べ物から生まれます。",
+        "speaker": null
+      },
+      {
+        "en": "They eat algae and small animals such as brine shrimp.",
+        "jp": "藻や、アルテミアという小さなエビの仲間などを食べます。",
+        "speaker": null
+      },
+      {
+        "en": "These foods contain natural pigments called carotenoids.",
+        "jp": "こうした食べ物には、カロテノイドという天然の色素が含まれています。",
+        "speaker": null
+      },
+      {
+        "en": "The birds process these pigments,",
+        "jp": "鳥の体は、その色素を変化させ、",
+        "speaker": null
+      },
+      {
+        "en": "and the color becomes part of their feathers.",
+        "jp": "その色が、羽の色になります。",
+        "speaker": null
+      },
+      {
+        "en": "The way they get food is unusual, too.",
+        "jp": "食べ物のとり方も、変わっています。",
+        "speaker": null
+      },
+      {
+        "en": "A flamingo lowers its head into the water",
+        "jp": "フラミンゴは、水の中に頭を下ろします。",
+        "speaker": null
+      },
+      {
+        "en": "with its bill upside down.",
+        "jp": "くちばしを、上下逆さまにして。",
+        "speaker": null
+      },
+      {
+        "en": "Its tongue helps move water through the bill.",
+        "jp": "舌が、水をくちばしの中に通すのを助けます。",
+        "speaker": null
+      },
+      {
+        "en": "Special structures along the edges trap food",
+        "jp": "ふちに沿った特殊な構造が、食べ物をとらえます。",
+        "speaker": null
+      },
+      {
+        "en": "while the water flows out.",
+        "jp": "水が外に流れ出る間に。",
+        "speaker": null
+      },
+      {
+        "en": "For a flamingo, a meal does more than fill its stomach.",
+        "jp": "フラミンゴにとって、食事はおなかを満たすだけではありません。",
+        "speaker": null
+      },
+      {
+        "en": "It helps create the bird's entire look.",
+        "jp": "その鳥の見た目全体を作る助けにもなるのです。",
+        "speaker": null
+      }
+    ],
+    "sources": [
+      {
+        "publisher": "Smithsonian’s National Zoo and Conservation Biology Institute",
+        "title": "Why Are Flamingos Pink? And Other Flamingo Facts",
+        "url": "https://nationalzoo.si.edu/animals/news/why-are-flamingos-pink-and-other-flamingo-facts"
+      }
+    ]
+  },
+  {
+    "id": "09-mars-sunset",
+    "title": "赤い星の、青い夕焼け",
+    "englishTitle": "The Red Planet’s Blue Goodbye",
+    "description": "赤い惑星なのに、太陽の周りは青くなる。火星の夕焼けと、ちりの働き。",
+    "category": "宇宙",
+    "wordCount": 100,
+    "sourceText": "Mars is often called the Red Planet. You might therefore expect every sunset there to look red. Yet cameras on Mars have captured a blue glow around the setting Sun. The surprising color comes from fine dust in the atmosphere. These particles affect different colors of light in different ways. Dust scatters some blue light, making the sky near the Sun look blue. The effect becomes especially noticeable at sunrise and sunset, when sunlight travels through more dust. This does not turn the whole Martian sky blue. Even a familiar daily event can have a different color on another world.",
+    "chunks": [
+      {
+        "en": "Mars is often called the Red Planet.",
+        "jp": "火星は、よく「赤い惑星」と呼ばれます。",
+        "speaker": null
+      },
+      {
+        "en": "You might therefore expect every sunset there to look red.",
+        "jp": "だから、火星の夕焼けは、いつも赤いと思うかもしれません。",
+        "speaker": null
+      },
+      {
+        "en": "Yet cameras on Mars have captured a blue glow",
+        "jp": "ところが、火星のカメラは、青い輝きをとらえています。",
+        "speaker": null
+      },
+      {
+        "en": "around the setting Sun.",
+        "jp": "沈んでいく太陽の周りに。",
+        "speaker": null
+      },
+      {
+        "en": "The surprising color comes from fine dust in the atmosphere.",
+        "jp": "その意外な色は、大気中の細かいちりによって生まれます。",
+        "speaker": null
+      },
+      {
+        "en": "These particles affect different colors of light in different ways.",
+        "jp": "その粒は、光の色によって異なる影響を与えます。",
+        "speaker": null
+      },
+      {
+        "en": "Dust scatters some blue light,",
+        "jp": "ちりが青い光の一部を散らすため、",
+        "speaker": null
+      },
+      {
+        "en": "making the sky near the Sun look blue.",
+        "jp": "太陽の近くの空が青く見えるのです。",
+        "speaker": null
+      },
+      {
+        "en": "The effect becomes especially noticeable at sunrise and sunset,",
+        "jp": "その効果は、日の出と日の入りに、特に目立つようになります。",
+        "speaker": null
+      },
+      {
+        "en": "when sunlight travels through more dust.",
+        "jp": "太陽の光が、より多くのちりの中を通るときです。",
+        "speaker": null
+      },
+      {
+        "en": "This does not turn the whole Martian sky blue.",
+        "jp": "これで、火星の空全体が青くなるわけではありません。",
+        "speaker": null
+      },
+      {
+        "en": "Even a familiar daily event",
+        "jp": "毎日起こる身近な出来事でさえ、",
+        "speaker": null
+      },
+      {
+        "en": "can have a different color on another world.",
+        "jp": "別の世界では、違う色を見せることがあるのです。",
+        "speaker": null
+      }
+    ],
+    "sources": [
+      {
+        "publisher": "NASA Jet Propulsion Laboratory",
+        "title": "Color Variations in the Sky at Sunset",
+        "url": "https://www.jpl.nasa.gov/images/pia00917-color-variations-in-the-sky-at-sunset/"
+      },
+      {
+        "publisher": "NASA Jet Propulsion Laboratory",
+        "title": "Mars Movie: I’m Dreaming of a Blue Sunset",
+        "url": "https://www.jpl.nasa.gov/news/mars-movie-im-dreaming-of-a-blue-sunset/"
+      }
+    ]
+  },
+  {
+    "id": "10-roman-concrete",
+    "title": "古代ローマの自己修理コンクリート",
+    "englishTitle": "Concrete with a Repair Kit",
+    "description": "古いコンクリートの石灰に、ひびを埋める力が？ 古代の知恵と現代の実験。",
+    "category": "歴史",
+    "wordCount": 106,
+    "sourceText": "Some ancient Roman concrete has survived for around two thousand years. Researchers found an interesting clue to its long life: small pieces of lime inside the material. These pieces once looked like signs of careless mixing. A study suggested a more useful role. When tiny cracks reach the lime, water can trigger chemical reactions that help fill the gaps. To test the idea, researchers made new concrete containing similar pieces of lime. Cracks in their samples closed during the experiment. This does not mean every Roman building could repair any damage. Still, an old building material may offer fresh ideas for making future structures last longer.",
+    "chunks": [
+      {
+        "en": "Some ancient Roman concrete has survived for around two thousand years.",
+        "jp": "古代ローマのコンクリートには、約2000年も残っているものがあります。",
+        "speaker": null
+      },
+      {
+        "en": "Researchers found an interesting clue to its long life:",
+        "jp": "研究者たちは、その長持ちする理由の、興味深い手がかりを見つけました。",
+        "speaker": null
+      },
+      {
+        "en": "small pieces of lime inside the material.",
+        "jp": "材料の中にある、小さな石灰のかけらです。",
+        "speaker": null
+      },
+      {
+        "en": "These pieces once looked like signs of careless mixing.",
+        "jp": "かつて、そのかけらは、混ぜ方が雑だった証拠のように見えていました。",
+        "speaker": null
+      },
+      {
+        "en": "A study suggested a more useful role.",
+        "jp": "ある研究は、もっと役立つ働きがあることを示唆しました。",
+        "speaker": null
+      },
+      {
+        "en": "When tiny cracks reach the lime,",
+        "jp": "小さなひびが石灰に達すると、",
+        "speaker": null
+      },
+      {
+        "en": "water can trigger chemical reactions",
+        "jp": "水が、化学反応を引き起こすことがあります。",
+        "speaker": null
+      },
+      {
+        "en": "that help fill the gaps.",
+        "jp": "すき間を埋める助けとなる反応です。",
+        "speaker": null
+      },
+      {
+        "en": "To test the idea, researchers made new concrete",
+        "jp": "その考えを確かめるため、研究者たちは、新しいコンクリートを作りました。",
+        "speaker": null
+      },
+      {
+        "en": "containing similar pieces of lime.",
+        "jp": "同じような石灰のかけらを含むものを。",
+        "speaker": null
+      },
+      {
+        "en": "Cracks in their samples closed during the experiment.",
+        "jp": "実験中に、その試料のひびはふさがりました。",
+        "speaker": null
+      },
+      {
+        "en": "This does not mean every Roman building could repair any damage.",
+        "jp": "すべてのローマ建築が、どんな損傷も直せたという意味ではありません。",
+        "speaker": null
+      },
+      {
+        "en": "Still, an old building material may offer fresh ideas",
+        "jp": "それでも、古い建材が、新しいヒントをくれるかもしれません。",
+        "speaker": null
+      },
+      {
+        "en": "for making future structures last longer.",
+        "jp": "これからの建造物を、もっと長持ちさせるための。",
+        "speaker": null
+      }
+    ],
+    "sources": [
+      {
+        "publisher": "MIT News",
+        "title": "Riddle solved: Why was Roman concrete so durable?",
+        "url": "https://news.mit.edu/2023/roman-concrete-durability-lime-casts-0106"
+      },
+      {
+        "publisher": "Science Advances / MIT repository",
+        "title": "Hot mixing: Mechanistic insights into the durability of ancient Roman concrete",
+        "url": "https://dspace.mit.edu/entities/publication/d114c164-bdc9-4faf-8cd2-bb5075acfc0e"
+      }
+    ]
+  }
+]
