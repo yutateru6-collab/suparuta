@@ -67,6 +67,14 @@ test('prompt preserves source as a JSON string, including quotes and instruction
   assert.equal(example[0].en,'These places are sometimes called "libraries of things."');
 });
 test('blank prompt instructs the model not to invent a source',()=>assert.ok(buildChunkPrompt('').includes('題材を創作せず')));
+test('prompt prioritizes meaning over a hard word cutoff and keeps translation scope explicit',()=>{
+  const prompt=buildChunkPrompt('Young students really enjoyed reading several interesting science books yesterday near the school entrance.');
+  assert.ok(prompt.includes('12語は目安'));
+  assert.ok(prompt.includes('12語を超えても一つに保ちます'));
+  assert.ok(!prompt.includes('1〜12語の範囲'));
+  assert.ok(prompt.includes('否定・only・条件・時制・程度を保持'));
+  assert.ok(prompt.includes('英文と和訳が同じ範囲'));
+});
 test('grouping preserves word order for every display mode',()=>{
   for(const size of [0,1,2,3,4,5]){const frames=makeFrames(parsed,size);assert.equal(frames.map(f=>f.text).join(' '),source);assert.equal(frames.reduce((n,f)=>n+f.wordCount,0),228);for(let i=1;i<frames.length;i++)assert.equal(frames[i].startWord,frames[i-1].startWord+frames[i-1].wordCount);}
 });

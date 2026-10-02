@@ -1,0 +1,85 @@
+{
+  "passages": [
+    {
+      "id": "01-wombat-cubes",
+      "words": 101,
+      "chunks": 14,
+      "maxChunkWords": 10,
+      "jsonRoundtrip": "pass",
+      "sourceReconstruction": "pass"
+    },
+    {
+      "id": "02-octopus-taste",
+      "words": 104,
+      "chunks": 14,
+      "maxChunkWords": 11,
+      "jsonRoundtrip": "pass",
+      "sourceReconstruction": "pass"
+    },
+    {
+      "id": "03-venus-calendar",
+      "words": 101,
+      "chunks": 14,
+      "maxChunkWords": 11,
+      "jsonRoundtrip": "pass",
+      "sourceReconstruction": "pass"
+    },
+    {
+      "id": "04-eiffel-stretch",
+      "words": 95,
+      "chunks": 13,
+      "maxChunkWords": 11,
+      "jsonRoundtrip": "pass",
+      "sourceReconstruction": "pass"
+    },
+    {
+      "id": "05-bubble-wrap",
+      "words": 101,
+      "chunks": 14,
+      "maxChunkWords": 10,
+      "jsonRoundtrip": "pass",
+      "sourceReconstruction": "pass"
+    },
+    {
+      "id": "06-hooks-from-nature",
+      "words": 103,
+      "chunks": 14,
+      "maxChunkWords": 11,
+      "jsonRoundtrip": "pass",
+      "sourceReconstruction": "pass"
+    },
+    {
+      "id": "07-popcorn-pressure",
+      "words": 105,
+      "chunks": 15,
+      "maxChunkWords": 11,
+      "jsonRoundtrip": "pass",
+      "sourceReconstruction": "pass"
+    },
+    {
+      "id": "08-flamingo-colors",
+      "words": 107,
+      "chunks": 14,
+      "maxChunkWords": 11,
+      "jsonRoundtrip": "pass",
+      "sourceReconstruction": "pass"
+    },
+    {
+      "id": "09-mars-sunset",
+      "words": 100,
+      "chunks": 13,
+      "maxChunkWords": 10,
+      "jsonRoundtrip": "pass",
+      "sourceReconstruction": "pass"
+    },
+    {
+      "id": "10-roman-concrete",
+      "words": 106,
+      "chunks": 14,
+      "maxChunkWords": 11,
+      "jsonRoundtrip": "pass",
+      "sourceReconstruction": "pass"
+    }
+  ],
+  "status": "pass"
+}
