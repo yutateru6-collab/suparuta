@@ -82,13 +82,15 @@ test('changing display units preserves reading position and labels full-chunk tr
   await expect(page.getByTestId('translation')).toContainText('元のチャンク全体の訳');
 });
 test('translation delay does not elapse before playback or during a pause', async ({page})=>{
+  await page.clock.install({time:new Date('2026-01-01T00:00:00Z')});
+  await page.clock.pauseAt(new Date('2026-01-01T00:00:01Z'));
   await start(page); await page.getByRole('button',{name:'翻訳遅延: なし',exact:true}).click();
-  await page.waitForTimeout(2150); await expect(page.getByTestId('translation')).toHaveCount(0);
-  await page.getByRole('button',{name:'スタート',exact:true}).click(); await page.waitForTimeout(500);
+  await page.clock.runFor(2150); await expect(page.getByTestId('translation')).toHaveCount(0);
+  await page.getByRole('button',{name:'スタート',exact:true}).click(); await page.clock.runFor(500);
   await page.getByRole('button',{name:'一時停止',exact:true}).click();
-  await page.waitForTimeout(2150); await expect(page.getByTestId('translation')).toHaveCount(0);
+  await page.clock.runFor(2150); await expect(page.getByTestId('translation')).toHaveCount(0);
   await page.getByRole('button',{name:'スタート',exact:true}).click();
-  await expect(page.getByTestId('translation')).toBeVisible({timeout:2500});
+  await page.clock.runFor(1600); await expect(page.getByTestId('translation')).toBeVisible();
   await page.getByRole('button',{name:'一時停止',exact:true}).click();
 });
 test('seven-second delay does not slow playback when translation is disabled', async ({page})=>{
