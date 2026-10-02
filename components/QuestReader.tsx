@@ -43,13 +43,20 @@ export const QuestReader: React.FC<Props> = ({ chunks, settings, onSettingsChang
   const section = sectionAtChunk(sectionEnds, frame?.chunkIndex ?? 0);
   const progress = isFinished ? 100 : checkpoint !== null ? checkpointPercent(frames, sectionEnds[checkpoint]) : frames.length ? (frameIndex + Math.min(1, elapsedMs / totalMs)) / frames.length * 100 : 0;
   const resetClock = useCallback(() => { elapsedRef.current = 0; setElapsedMs(0); }, []);
-  useEffect(() => { if (frame) onPosition(frame.startWord, viewed); }, [frame, viewed, onPosition]);
+  const moveToFrame = useCallback((index: number, ranges = viewed, targetFrames = frames) => {
+    const nextIndex = Math.max(0, Math.min(targetFrames.length - 1, index));
+    const nextFrame = targetFrames[nextIndex];
+    if (!nextFrame) return;
+    // Position and coverage form one saved transition, including before reload.
+    onPosition(nextFrame.startWord, ranges);
+    setFrameIndex(nextIndex); setViewed(ranges);
+  }, [frames, viewed, onPosition]);
 
   const finish = useCallback(() => {
     if (isFinished || !frame) return;
     setIsPlaying(false); setIsFinished(true); resetClock();
     const ranges = addViewedRange(viewed, frame.startWord, frame.wordCount);
-    setViewed(ranges);
+    moveToFrame(frameIndex, ranges);
     const last = frames.at(-1)!;
     const covered = allWordsViewed(ranges, last.startWord + last.wordCount);
     setComplete(covered);
@@ -72,31 +79,32 @@ export const QuestReader: React.FC<Props> = ({ chunks, settings, onSettingsChang
       }
     }
     onFinish();
-  }, [isFinished, frame, frames, viewed, questProgress, missionId, initialProgress.writable, onFinish, resetClock]);
+  }, [isFinished, frame, frameIndex, frames, viewed, questProgress, missionId, initialProgress.writable, onFinish, resetClock, moveToFrame]);
 
   const jumpToFrame = useCallback((index: number) => {
     setIsPlaying(false); setIsFinished(false); setCheckpoint(null);
-    setFrameIndex(Math.max(0, Math.min(frames.length - 1, index))); resetClock();
-  }, [frames.length, resetClock]);
+    moveToFrame(index); resetClock();
+  }, [moveToFrame, resetClock]);
 
   const advance = useCallback((fromPlayback = false) => {
     if (isFinished || !frame) return;
     if (frameIndex + 1 >= frames.length) { finish(); return; }
-    setViewed(previous => addViewedRange(previous, frame.startWord, frame.wordCount));
+    const ranges = addViewedRange(viewed, frame.startWord, frame.wordCount);
     const next = frames[frameIndex + 1];
     if (frame && next.chunkIndex > frame.chunkIndex && sectionEnds[section] === frame.chunkIndex &&
       section < sectionEnds.length - 1 && !clearedCheckpoints.has(section)) {
       resumeAfterCheckpoint.current = fromPlayback;
       setIsPlaying(false); setCheckpoint(section); resetClock();
+      moveToFrame(frameIndex, ranges);
       return;
     }
-    setFrameIndex(frameIndex + 1); resetClock();
-  }, [isFinished, frameIndex, frames, frame, sectionEnds, section, clearedCheckpoints, finish, resetClock]);
+    moveToFrame(frameIndex + 1, ranges); resetClock();
+  }, [isFinished, frameIndex, frames, frame, viewed, sectionEnds, section, clearedCheckpoints, finish, resetClock, moveToFrame]);
 
   const continueCheckpoint = () => {
     if (checkpoint === null) return;
     setClearedCheckpoints(previous => new Set(previous).add(checkpoint));
-    setCheckpoint(null); setFrameIndex(index => Math.min(frames.length - 1, index + 1));
+    setCheckpoint(null); moveToFrame(frameIndex + 1);
     resetClock(); setIsPlaying(resumeAfterCheckpoint.current);
   };
 
@@ -145,7 +153,8 @@ export const QuestReader: React.FC<Props> = ({ chunks, settings, onSettingsChang
 
   const setGroupSize = (size: number) => {
     const word = frame?.startWord ?? 0;
-    onSettingsChange({ ...settings, wordGroupSize: size }); setFrameIndex(frameAtWord(makeFrames(chunks, size), word));
+    const nextFrames = makeFrames(chunks, size);
+    onSettingsChange({ ...settings, wordGroupSize: size }); moveToFrame(frameAtWord(nextFrames, word), viewed, nextFrames);
     setIsPlaying(false); setCheckpoint(null); setIsFinished(false); resetClock();
   };
   const changeDelay = (seconds: number) => {
@@ -211,7 +220,7 @@ export const QuestReader: React.FC<Props> = ({ chunks, settings, onSettingsChang
       </footer>
     </div>
     <Dialog open={settingsOpen} title="冒険の表示設定" onClose={() => setSettingsOpen(false)}>
-      <button className="quest-secondary" onClick={() => { const word = frame.startWord; onSettingsChange(defaultSettings()); setFrameIndex(frameAtWord(makeFrames(chunks, 0), word)); setCheckpoint(null); setIsPlaying(false); resetClock(); }}>学習設定をリセット</button>
+      <button className="quest-secondary" onClick={() => { const nextFrames = makeFrames(chunks, 0); onSettingsChange(defaultSettings()); moveToFrame(frameAtWord(nextFrames, frame.startWord), viewed, nextFrames); setCheckpoint(null); setIsPlaying(false); resetClock(); }}>学習設定をリセット</button>
       <SpeedSelector selectedWpm={dynamicWpm} onSelect={value => { setDynamicWpm(value); resetClock(); }} variant="quest" />
       <fieldset><legend>表示単位</legend><div className="quest-options">{[0, 1, 2, 3, 4, 5].map(size => <button className="quest-option" key={size} aria-pressed={wordGroupSize === size} onClick={() => setGroupSize(size)}>{size ? `${size}語` : 'チャンク'}</button>)}</div></fieldset>
       {hasTranslation && <fieldset><legend>日本語訳の遅延</legend><div className="quest-options">{[0, 2, 3, 4, 5, 6, 7].map(seconds => <button className="quest-option" key={seconds} aria-pressed={translationDelay === seconds} onClick={() => changeDelay(seconds)}>{seconds ? `${seconds}秒` : 'なし'}</button>)}</div><p className="quest-small-note">訳を表示している時だけ、再生中に遅延を数えます。</p></fieldset>}

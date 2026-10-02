@@ -22,31 +22,37 @@ export const ReaderCanvas: React.FC<ReaderCanvasProps> = ({ chunks, settings, on
   const elapsedRef = useRef(0);
   const frames = useMemo(() => makeFrames(chunks, wordGroupSize), [chunks, wordGroupSize]);
   const currentFrame = frames[frameIndex];
-  useEffect(() => { if (currentFrame) onPosition(currentFrame.startWord, []); }, [currentFrame, onPosition]);
+  const moveToFrame = useCallback((index: number, targetFrames = frames) => {
+    const nextIndex = Math.max(0, Math.min(targetFrames.length - 1, index));
+    const nextFrame = targetFrames[nextIndex];
+    if (!nextFrame) return;
+    onPosition(nextFrame.startWord, []);
+    setFrameIndex(nextIndex);
+  }, [frames, onPosition]);
   const hasTranslation = chunks.some(chunk => chunk.jp.trim());
   const { delayMs, totalMs } = frameTiming(currentFrame, dynamicWpm, translationDelay, showTranslation);
   const resetClock = useCallback(() => { elapsedRef.current = 0; setElapsedMs(0); }, []);
-  const jumpToFrame = useCallback((index: number) => { setIsPlaying(false); setIsFinished(false); setFrameIndex(Math.max(0, Math.min(frames.length - 1, index))); resetClock(); }, [frames.length, resetClock]);
+  const jumpToFrame = useCallback((index: number) => { setIsPlaying(false); setIsFinished(false); moveToFrame(index); resetClock(); }, [moveToFrame, resetClock]);
   const finish = useCallback(() => { setIsPlaying(false); setIsFinished(true); onFinish(); }, [onFinish]);
   const nextFrame = useCallback(() => { if (frameIndex + 1 < frames.length) jumpToFrame(frameIndex + 1); else finish(); }, [frameIndex, frames.length, jumpToFrame, finish]);
   const restart = useCallback(() => { jumpToFrame(0); }, [jumpToFrame]);
   const togglePlay = useCallback(() => {
     if (!frames.length) return;
-    if (isFinished) { setFrameIndex(0); setIsFinished(false); resetClock(); }
+    if (isFinished) { moveToFrame(0); setIsFinished(false); resetClock(); }
     setIsPlaying(playing => !playing);
-  }, [isFinished, frames.length, resetClock]);
+  }, [isFinished, frames.length, resetClock, moveToFrame]);
   // One clock drives translation and advancement; pauses preserve elapsed time.
   useEffect(() => {
     if (!isPlaying || !currentFrame || isFinished) return;
     let raf = 0; let last = performance.now();
     const tick = (now: number) => {
       elapsedRef.current += Math.max(0, now - last); last = now; setElapsedMs(elapsedRef.current);
-      if (elapsedRef.current >= totalMs) { resetClock(); if (frameIndex + 1 < frames.length) setFrameIndex(frameIndex + 1); else finish(); }
+      if (elapsedRef.current >= totalMs) { resetClock(); if (frameIndex + 1 < frames.length) moveToFrame(frameIndex + 1); else finish(); }
       else raf = requestAnimationFrame(tick);
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, [isPlaying, currentFrame, isFinished, totalMs, frameIndex, frames.length, finish, resetClock]);
+  }, [isPlaying, currentFrame, isFinished, totalMs, frameIndex, frames.length, finish, resetClock, moveToFrame]);
   useEffect(() => {
     const handleHidden = () => { if (document.hidden) setIsPlaying(false); };
     document.addEventListener('visibilitychange', handleHidden);
@@ -71,7 +77,7 @@ export const ReaderCanvas: React.FC<ReaderCanvasProps> = ({ chunks, settings, on
   }, [isSettingsOpen, isReviewOpen, frameIndex, jumpToFrame, nextFrame, togglePlay, onReset, restart]);
   const setGroupSize = (size: number) => {
     const word = currentFrame?.startWord ?? 0; const nextFrames = makeFrames(chunks, size);
-    onSettingsChange({ ...settings, wordGroupSize: size }); setFrameIndex(frameAtWord(nextFrames, word)); setIsPlaying(false); setIsFinished(false); resetClock();
+    onSettingsChange({ ...settings, wordGroupSize: size }); moveToFrame(frameAtWord(nextFrames, word), nextFrames); setIsPlaying(false); setIsFinished(false); resetClock();
   };
   const changeTranslation = () => { setShowTranslation(!showTranslation); resetClock(); };
   const changeDelay = (delay: number) => { onSettingsChange({ ...settings, translationDelay: delay, showTranslation: delay > 0 || showTranslation }); resetClock(); };
@@ -100,7 +106,7 @@ export const ReaderCanvas: React.FC<ReaderCanvasProps> = ({ chunks, settings, on
       <p className="hidden sm:block text-center text-xs text-gray-400">Space: 再生・停止 ／ ← →: 前後へ ／ R: 最初へ ／ Esc: 入力に戻る</p>
     </div></footer>
     <Dialog open={isSettingsOpen} title="表示・動作設定" onClose={() => setIsSettingsOpen(false)}>
-      <button className="control px-3" onClick={() => { const word = currentFrame.startWord; onSettingsChange(defaultSettings()); setFrameIndex(frameAtWord(makeFrames(chunks, 0), word)); setIsPlaying(false); resetClock(); }}>学習設定をリセット</button>
+      <button className="control px-3" onClick={() => { const nextFrames = makeFrames(chunks, 0); onSettingsChange(defaultSettings()); moveToFrame(frameAtWord(nextFrames, currentFrame.startWord), nextFrames); setIsPlaying(false); resetClock(); }}>学習設定をリセット</button>
       <SpeedSelector selectedWpm={dynamicWpm} onSelect={value => { setDynamicWpm(value); resetClock(); }} />
       <fieldset className="space-y-2"><legend className="mb-2">表示単位</legend><div className="grid grid-cols-3 sm:grid-cols-6 gap-2">{[0,1,2,3,4,5].map(size => <button className="control px-2" key={size} aria-pressed={wordGroupSize === size} onClick={() => setGroupSize(size)}>{size ? `${size}語` : 'チャンク'}</button>)}</div></fieldset>
       {hasTranslation && <fieldset className="space-y-2"><legend className="mb-2">日本語訳</legend><button className="control px-3" onClick={changeTranslation} aria-pressed={showTranslation}>訳を表示: {showTranslation ? 'ON' : 'OFF'}</button><div className="flex flex-wrap gap-2">{[0,2,3,4,5,6,7].map(delay => <button key={delay} className="control px-3" aria-pressed={translationDelay === delay} onClick={() => changeDelay(delay)}>{delay ? `${delay}秒` : '即時'}</button>)}</div><p className="text-sm text-gray-300">遅延は再生開始から数えます。訳がOFF、または訳のないチャンクには追加の待ち時間はありません。</p></fieldset>}
