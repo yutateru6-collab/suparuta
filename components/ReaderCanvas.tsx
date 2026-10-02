@@ -5,23 +5,24 @@ import { Button } from './Button';
 import { Dialog } from './Dialog';
 import { SpeedSelector } from './SpeedSelector';
 import { makeFrames, frameAtWord, frameTiming } from '../services/readerModel';
-interface ReaderCanvasProps { chunks: Chunk[]; wpm: number; onFinish: () => void; onReset: () => void; notice?: string }
+import { defaultSettings, type ReaderStateProps } from '../services/readingState';
+interface ReaderCanvasProps extends ReaderStateProps { chunks: Chunk[]; onFinish: () => void; onReset: () => void; notice?: string }
 type RevealMode = 'fade' | 'flash' | 'blur' | 'zoom';
-export const ReaderCanvas: React.FC<ReaderCanvasProps> = ({ chunks, wpm, onFinish, onReset, notice }) => {
-  const [frameIndex, setFrameIndex] = useState(0);
+export const ReaderCanvas: React.FC<ReaderCanvasProps> = ({ chunks, settings, onSettingsChange, initialPosition, onPosition, onFinish, onReset, notice }) => {
+  const [frameIndex, setFrameIndex] = useState(() => frameAtWord(makeFrames(chunks, settings.wordGroupSize), initialPosition.wordOffset));
   const [isPlaying, setIsPlaying] = useState(false);
   const [isFinished, setIsFinished] = useState(false);
-  const [showTranslation, setShowTranslation] = useState(false);
-  const [revealMode, setRevealMode] = useState<RevealMode>('fade');
-  const [wordGroupSize, setWordGroupSize] = useState(0);
-  const [dynamicWpm, setDynamicWpm] = useState(wpm);
-  const [translationDelay, setTranslationDelay] = useState(0);
+  const { showTranslation, translationDelay, wpm: dynamicWpm, wordGroupSize, revealMode } = settings;
+  const setShowTranslation = (value: boolean) => onSettingsChange({ ...settings, showTranslation: value });
+  const setDynamicWpm = (value: number) => onSettingsChange({ ...settings, wpm: value });
+  const setRevealMode = (value: RevealMode) => onSettingsChange({ ...settings, revealMode: value });
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isReviewOpen, setIsReviewOpen] = useState(false);
   const [elapsedMs, setElapsedMs] = useState(0);
   const elapsedRef = useRef(0);
   const frames = useMemo(() => makeFrames(chunks, wordGroupSize), [chunks, wordGroupSize]);
   const currentFrame = frames[frameIndex];
+  useEffect(() => { if (currentFrame) onPosition(currentFrame.startWord, []); }, [currentFrame, onPosition]);
   const hasTranslation = chunks.some(chunk => chunk.jp.trim());
   const { delayMs, totalMs } = frameTiming(currentFrame, dynamicWpm, translationDelay, showTranslation);
   const resetClock = useCallback(() => { elapsedRef.current = 0; setElapsedMs(0); }, []);
@@ -70,10 +71,10 @@ export const ReaderCanvas: React.FC<ReaderCanvasProps> = ({ chunks, wpm, onFinis
   }, [isSettingsOpen, isReviewOpen, frameIndex, jumpToFrame, nextFrame, togglePlay, onReset, restart]);
   const setGroupSize = (size: number) => {
     const word = currentFrame?.startWord ?? 0; const nextFrames = makeFrames(chunks, size);
-    setWordGroupSize(size); setFrameIndex(frameAtWord(nextFrames, word)); setIsPlaying(false); setIsFinished(false); resetClock();
+    onSettingsChange({ ...settings, wordGroupSize: size }); setFrameIndex(frameAtWord(nextFrames, word)); setIsPlaying(false); setIsFinished(false); resetClock();
   };
-  const changeTranslation = () => { setShowTranslation(value => !value); resetClock(); };
-  const changeDelay = (delay: number) => { setTranslationDelay(delay); if (delay > 0) setShowTranslation(true); resetClock(); };
+  const changeTranslation = () => { setShowTranslation(!showTranslation); resetClock(); };
+  const changeDelay = (delay: number) => { onSettingsChange({ ...settings, translationDelay: delay, showTranslation: delay > 0 || showTranslation }); resetClock(); };
   const progress = isFinished ? 100 : frames.length ? (frameIndex + Math.min(1, elapsedMs / totalMs)) / frames.length * 100 : 0;
   if (!currentFrame) return <main className="p-6 text-white"><p role="alert">表示できる英文がありません。</p><Button onClick={onReset}>入力に戻る</Button></main>;
   return <div className="reader-shell bg-spartan-black text-white">
@@ -99,6 +100,7 @@ export const ReaderCanvas: React.FC<ReaderCanvasProps> = ({ chunks, wpm, onFinis
       <p className="hidden sm:block text-center text-xs text-gray-400">Space: 再生・停止 ／ ← →: 前後へ ／ R: 最初へ ／ Esc: 入力に戻る</p>
     </div></footer>
     <Dialog open={isSettingsOpen} title="表示・動作設定" onClose={() => setIsSettingsOpen(false)}>
+      <button className="control px-3" onClick={() => { const word = currentFrame.startWord; onSettingsChange(defaultSettings()); setFrameIndex(frameAtWord(makeFrames(chunks, 0), word)); setIsPlaying(false); resetClock(); }}>学習設定をリセット</button>
       <SpeedSelector selectedWpm={dynamicWpm} onSelect={value => { setDynamicWpm(value); resetClock(); }} />
       <fieldset className="space-y-2"><legend className="mb-2">表示単位</legend><div className="grid grid-cols-3 sm:grid-cols-6 gap-2">{[0,1,2,3,4,5].map(size => <button className="control px-2" key={size} aria-pressed={wordGroupSize === size} onClick={() => setGroupSize(size)}>{size ? `${size}語` : 'チャンク'}</button>)}</div></fieldset>
       {hasTranslation && <fieldset className="space-y-2"><legend className="mb-2">日本語訳</legend><button className="control px-3" onClick={changeTranslation} aria-pressed={showTranslation}>訳を表示: {showTranslation ? 'ON' : 'OFF'}</button><div className="flex flex-wrap gap-2">{[0,2,3,4,5,6,7].map(delay => <button key={delay} className="control px-3" aria-pressed={translationDelay === delay} onClick={() => changeDelay(delay)}>{delay ? `${delay}秒` : '即時'}</button>)}</div><p className="text-sm text-gray-300">遅延は再生開始から数えます。訳がOFF、または訳のないチャンクには追加の待ち時間はありません。</p></fieldset>}

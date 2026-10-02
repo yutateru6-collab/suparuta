@@ -1,25 +1,27 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ArrowLeft, ArrowRight, BookOpen, Gift, Languages, Pause, Play, RotateCcw, Settings2, Sparkles } from 'lucide-react';
 import type { Chunk } from '../types';
-import { makeFrames, frameAtWord, frameTiming } from '../services/readerModel';
+import { makeFrames, frameAtWord, frameTiming, checkpointPercent } from '../services/readerModel';
+import { defaultSettings, addViewedRange, allWordsViewed, type ReaderStateProps } from '../services/readingState';
 import { finishQuest, loadQuestProgress, QUEST_PROGRESS_KEY, questId, questSections, sectionAtChunk } from '../services/quest';
 import { Dialog } from './Dialog';
 import { QuestMascot } from './QuestMascot';
 import { SpeedSelector } from './SpeedSelector';
 
-interface Props { chunks: Chunk[]; wpm: number; onFinish: () => void; onReset: () => void; notice?: string }
+interface Props extends ReaderStateProps { chunks: Chunk[]; onFinish: () => void; onReset: () => void; notice?: string }
 type RevealMode = 'fade' | 'flash' | 'blur' | 'zoom';
 const PARTICLES = Array.from({ length: 14 }, (_, index) => index);
 
-export const QuestReader: React.FC<Props> = ({ chunks, wpm, onFinish, onReset, notice }) => {
-  const [frameIndex, setFrameIndex] = useState(0);
+export const QuestReader: React.FC<Props> = ({ chunks, settings, onSettingsChange, initialPosition, onPosition, onFinish, onReset, notice }) => {
+  const [frameIndex, setFrameIndex] = useState(() => frameAtWord(makeFrames(chunks, settings.wordGroupSize), initialPosition.wordOffset));
   const [isPlaying, setIsPlaying] = useState(false);
   const [isFinished, setIsFinished] = useState(false);
-  const [showTranslation, setShowTranslation] = useState(false);
-  const [translationDelay, setTranslationDelay] = useState(0);
-  const [dynamicWpm, setDynamicWpm] = useState(wpm);
-  const [wordGroupSize, setWordGroupSize] = useState(0);
-  const [revealMode, setRevealMode] = useState<RevealMode>('fade');
+  const { showTranslation, translationDelay, wpm: dynamicWpm, wordGroupSize, revealMode } = settings;
+  const setShowTranslation = (value: boolean) => onSettingsChange({ ...settings, showTranslation: value });
+  const setDynamicWpm = (value: number) => onSettingsChange({ ...settings, wpm: value });
+  const setRevealMode = (value: RevealMode) => onSettingsChange({ ...settings, revealMode: value });
+  const [viewed, setViewed] = useState(initialPosition.viewed);
+  const [complete, setComplete] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [reviewOpen, setReviewOpen] = useState(false);
   const [checkpoint, setCheckpoint] = useState<number | null>(null);
@@ -39,22 +41,38 @@ export const QuestReader: React.FC<Props> = ({ chunks, wpm, onFinish, onReset, n
   const hasTranslation = chunks.some(chunk => chunk.jp.trim());
   const { delayMs, totalMs } = frameTiming(frame, dynamicWpm, translationDelay, showTranslation);
   const section = sectionAtChunk(sectionEnds, frame?.chunkIndex ?? 0);
-  const progress = isFinished ? 100 : frames.length ? (frameIndex + Math.min(1, elapsedMs / totalMs)) / frames.length * 100 : 0;
+  const progress = isFinished ? 100 : checkpoint !== null ? checkpointPercent(frames, sectionEnds[checkpoint]) : frames.length ? (frameIndex + Math.min(1, elapsedMs / totalMs)) / frames.length * 100 : 0;
   const resetClock = useCallback(() => { elapsedRef.current = 0; setElapsedMs(0); }, []);
+  useEffect(() => { if (frame) onPosition(frame.startWord, viewed); }, [frame, viewed, onPosition]);
 
   const finish = useCallback(() => {
+    if (isFinished || !frame) return;
     setIsPlaying(false); setIsFinished(true); resetClock();
-    const result = finishQuest(questProgress, missionId);
+    const ranges = addViewedRange(viewed, frame.startWord, frame.wordCount);
+    setViewed(ranges);
+    const last = frames.at(-1)!;
+    const covered = allWordsViewed(ranges, last.startWord + last.wordCount);
+    setComplete(covered);
+    const latest = loadQuestProgress();
+    // Keep unsaved session awards too (e.g. a full storage quota), so replay
+    // cannot repeatedly earn a first reward before this reader is closed.
+    const unsavedIds = questProgress.completed.filter(id => !latest.progress.completed.includes(id));
+    const currentProgress = latest.writable ? {
+      ...latest.progress,
+      completed: [...latest.progress.completed, ...unsavedIds],
+      sparks: Math.max(questProgress.sparks, latest.progress.sparks + unsavedIds.length * 30),
+    } : questProgress;
+    const result = covered ? finishQuest(currentProgress, missionId) : { progress: questProgress, earned: 0 };
     setEarned(result.earned);
     if (result.earned) {
       setQuestProgress(result.progress);
-      if (initialProgress.writable) {
+      if (initialProgress.writable && latest.writable) {
         try { localStorage.setItem(QUEST_PROGRESS_KEY, JSON.stringify(result.progress)); }
         catch { setStorageWarning('今回の冒険の記録を保存できませんでした。読書は続けられます。'); }
       }
     }
     onFinish();
-  }, [questProgress, missionId, initialProgress.writable, onFinish, resetClock]);
+  }, [isFinished, frame, frames, viewed, questProgress, missionId, initialProgress.writable, onFinish, resetClock]);
 
   const jumpToFrame = useCallback((index: number) => {
     setIsPlaying(false); setIsFinished(false); setCheckpoint(null);
@@ -62,7 +80,9 @@ export const QuestReader: React.FC<Props> = ({ chunks, wpm, onFinish, onReset, n
   }, [frames.length, resetClock]);
 
   const advance = useCallback((fromPlayback = false) => {
+    if (isFinished || !frame) return;
     if (frameIndex + 1 >= frames.length) { finish(); return; }
+    setViewed(previous => addViewedRange(previous, frame.startWord, frame.wordCount));
     const next = frames[frameIndex + 1];
     if (frame && next.chunkIndex > frame.chunkIndex && sectionEnds[section] === frame.chunkIndex &&
       section < sectionEnds.length - 1 && !clearedCheckpoints.has(section)) {
@@ -71,7 +91,7 @@ export const QuestReader: React.FC<Props> = ({ chunks, wpm, onFinish, onReset, n
       return;
     }
     setFrameIndex(frameIndex + 1); resetClock();
-  }, [frameIndex, frames, frame, sectionEnds, section, clearedCheckpoints, finish, resetClock]);
+  }, [isFinished, frameIndex, frames, frame, sectionEnds, section, clearedCheckpoints, finish, resetClock]);
 
   const continueCheckpoint = () => {
     if (checkpoint === null) return;
@@ -125,11 +145,11 @@ export const QuestReader: React.FC<Props> = ({ chunks, wpm, onFinish, onReset, n
 
   const setGroupSize = (size: number) => {
     const word = frame?.startWord ?? 0;
-    setWordGroupSize(size); setFrameIndex(frameAtWord(makeFrames(chunks, size), word));
+    onSettingsChange({ ...settings, wordGroupSize: size }); setFrameIndex(frameAtWord(makeFrames(chunks, size), word));
     setIsPlaying(false); setCheckpoint(null); setIsFinished(false); resetClock();
   };
   const changeDelay = (seconds: number) => {
-    setTranslationDelay(seconds); if (seconds > 0) setShowTranslation(true); resetClock();
+    onSettingsChange({ ...settings, translationDelay: seconds, showTranslation: seconds > 0 || showTranslation }); resetClock();
   };
   if (!frame) return <main className="p-6"><p role="alert">表示できる英文がありません。</p><button onClick={onReset}>入力に戻る</button></main>;
 
@@ -145,7 +165,7 @@ export const QuestReader: React.FC<Props> = ({ chunks, wpm, onFinish, onReset, n
         <div className="quest-route-track" role="progressbar" aria-label="読書の進み具合" aria-valuenow={Math.round(progress)} aria-valuemin={0} aria-valuemax={100}>
           <div className="quest-route-fill" style={{ width: `${progress}%` }} />
           <span className="quest-route-runner" style={{ left: `${Math.min(97, Math.max(3, progress))}%` }}><QuestMascot mood={isFinished ? 'happy' : isPlaying ? 'reading' : 'ready'} /></span>
-          {sectionEnds.slice(0, -1).map((end, index) => <span key={end} className={`quest-route-stop ${section > index || isFinished ? 'is-done' : ''}`} style={{ left: `${(end + 1) / chunks.length * 100}%` }} aria-hidden="true">★</span>)}
+          {sectionEnds.slice(0, -1).map((end, index) => <span key={end} className={`quest-route-stop ${clearedCheckpoints.has(index) ? 'is-done' : ''}`} style={{ left: `${checkpointPercent(frames, end)}%` }} aria-hidden="true">★</span>)}
         </div>
         <div className="quest-route-caption"><span>START</span><span>GOAL ✦</span></div>
       </section>
@@ -162,10 +182,10 @@ export const QuestReader: React.FC<Props> = ({ chunks, wpm, onFinish, onReset, n
         </section> : isFinished ? <section className="quest-event-card quest-finish" aria-labelledby="finish-title" data-testid="quest-finish">
           <div className="quest-particles" aria-hidden="true">{PARTICLES.map(i => <i key={i} style={{ '--piece': i } as React.CSSProperties} />)}</div>
           <QuestMascot mood="happy" size="large" />
-          <p className="quest-eyebrow">MISSION CLEAR!</p>
-          <h1 id="finish-title">読書の冒険、クリア！</h1>
-          <p>{earned ? `初回クリアで、きらめき +${earned}！` : 'この英文はクリア済み。読み直しも大切な冒険！'}</p>
-          <p className="quest-small-note">この報酬は読了の記録です。英文の理解度を採点したものではありません。</p>
+          <p className="quest-eyebrow">{complete ? 'MISSION CLEAR!' : 'END OF TEXT'}</p>
+          <h1 id="finish-title">{complete ? '読書の冒険、クリア！' : '英文の末尾に到達しました'}</h1>
+          <p>{!complete ? 'まだ確認していない表示範囲があります。全体を読んでから、もう一度末尾へ進んでください。' : earned ? `初回クリアで、きらめき +${earned}！` : 'この英文はクリア済み。読み直しも大切な冒険！'}</p>
+          <p className="quest-small-note">報酬は全表示範囲を進めた操作の記録です。読んだ時間や英文の理解度を測定・採点したものではありません。</p>
           <div className="quest-event-actions"><button className="quest-primary" onClick={restart}><RotateCcw size={19} /> もう一度読む</button><button className="quest-secondary" onClick={onReset}>別の英文へ</button></div>
         </section> : <section className="quest-reading-card" aria-label="英文表示">
           <div className="quest-card-top"><span className="quest-card-chip">✦ ことばの道</span><span className="quest-frame-count" data-testid="quest-frame-counter">{frameIndex + 1} / {frames.length}</span></div>
@@ -184,13 +204,14 @@ export const QuestReader: React.FC<Props> = ({ chunks, wpm, onFinish, onReset, n
           <button aria-label="次のチャンク" className="quest-step" onClick={() => advance(false)}><ArrowRight /></button>
         </div>}
         <div className="quest-reader-tools">
-          {hasTranslation && <button className="quest-tool" aria-pressed={showTranslation} onClick={() => { setShowTranslation(value => !value); resetClock(); }}><Languages size={16} /> 日本語訳 {showTranslation ? 'ON' : 'OFF'}</button>}
+          {hasTranslation && <button className="quest-tool" aria-pressed={showTranslation} onClick={() => { setShowTranslation(!showTranslation); resetClock(); }}><Languages size={16} /> 日本語訳 {showTranslation ? 'ON' : 'OFF'}</button>}
           <button className="quest-tool" onClick={() => { setIsPlaying(false); setSettingsOpen(true); }}><Settings2 size={17} /> 表示設定</button>
           <button className="quest-tool" onClick={() => { setIsPlaying(false); setReviewOpen(true); }}><BookOpen size={17} /> 復習リスト</button>
         </div>
       </footer>
     </div>
     <Dialog open={settingsOpen} title="冒険の表示設定" onClose={() => setSettingsOpen(false)}>
+      <button className="quest-secondary" onClick={() => { const word = frame.startWord; onSettingsChange(defaultSettings()); setFrameIndex(frameAtWord(makeFrames(chunks, 0), word)); setCheckpoint(null); setIsPlaying(false); resetClock(); }}>学習設定をリセット</button>
       <SpeedSelector selectedWpm={dynamicWpm} onSelect={value => { setDynamicWpm(value); resetClock(); }} variant="quest" />
       <fieldset><legend>表示単位</legend><div className="quest-options">{[0, 1, 2, 3, 4, 5].map(size => <button className="quest-option" key={size} aria-pressed={wordGroupSize === size} onClick={() => setGroupSize(size)}>{size ? `${size}語` : 'チャンク'}</button>)}</div></fieldset>
       {hasTranslation && <fieldset><legend>日本語訳の遅延</legend><div className="quest-options">{[0, 2, 3, 4, 5, 6, 7].map(seconds => <button className="quest-option" key={seconds} aria-pressed={translationDelay === seconds} onClick={() => changeDelay(seconds)}>{seconds ? `${seconds}秒` : 'なし'}</button>)}</div><p className="quest-small-note">訳を表示している時だけ、再生中に遅延を数えます。</p></fieldset>}

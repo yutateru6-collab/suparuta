@@ -12,6 +12,7 @@ test.beforeEach(async ({ page }) => {
 });
 
 test('quest sample, checkpoints, finish and one-time cosmetic reward', async ({ page }, info) => {
+  test.slow(); // Two full traversals plus screenshots on mobile WebKit.
   await expect(page.getByRole('heading', { name: /ことばの冒険へ/ })).toBeVisible();
   await page.screenshot({ path: info.outputPath('quest-home.png'), fullPage: true });
   await page.getByRole('button', { name: '校閲済みサンプルを入れる' }).click();

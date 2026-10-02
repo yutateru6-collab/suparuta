@@ -1,7 +1,7 @@
 import { test, expect, type Page } from '@playwright/test';
 import { readFileSync } from 'node:fs';
 import { buildChunkPrompt } from '../../services/chunkPrompt';
-const reviewedText = readFileSync('public/libraries-of-things.reviewed.json', 'utf8');
+const reviewedText = readFileSync('public/libraries-of-things.reviewed.json', 'utf8').replace(/\r\n/g,'\n');
 const reviewed: {en:string;jp:string;speaker:null}[] = JSON.parse(reviewedText);
 const smart = readFileSync('tests/fixtures/libraries.smart.txt', 'utf8');
 const source = readFileSync('tests/fixtures/libraries.source.txt', 'utf8').trim();
@@ -82,13 +82,15 @@ test('changing display units preserves reading position and labels full-chunk tr
   await expect(page.getByTestId('translation')).toContainText('元のチャンク全体の訳');
 });
 test('translation delay does not elapse before playback or during a pause', async ({page})=>{
+  await page.clock.install({time:new Date('2026-01-01T00:00:00Z')});
+  await page.clock.pauseAt(new Date('2026-01-01T00:00:01Z'));
   await start(page); await page.getByRole('button',{name:'翻訳遅延: なし',exact:true}).click();
-  await page.waitForTimeout(2150); await expect(page.getByTestId('translation')).toHaveCount(0);
-  await page.getByRole('button',{name:'スタート',exact:true}).click(); await page.waitForTimeout(500);
+  await page.clock.runFor(2150); await expect(page.getByTestId('translation')).toHaveCount(0);
+  await page.getByRole('button',{name:'スタート',exact:true}).click(); await page.clock.runFor(500);
   await page.getByRole('button',{name:'一時停止',exact:true}).click();
-  await page.waitForTimeout(2150); await expect(page.getByTestId('translation')).toHaveCount(0);
+  await page.clock.runFor(2150); await expect(page.getByTestId('translation')).toHaveCount(0);
   await page.getByRole('button',{name:'スタート',exact:true}).click();
-  await expect(page.getByTestId('translation')).toBeVisible({timeout:2500});
+  await page.clock.runFor(1600); await expect(page.getByTestId('translation')).toBeVisible();
   await page.getByRole('button',{name:'一時停止',exact:true}).click();
 });
 test('seven-second delay does not slow playback when translation is disabled', async ({page})=>{
@@ -109,7 +111,7 @@ test('storage quota errors remain nonfatal and display a warning', async ({page}
   await page.evaluate(()=>{Storage.prototype.setItem=()=>{throw new DOMException('Quota','QuotaExceededError');};});
   await start(page);
   await page.getByRole('button',{name:'入力に戻る',exact:true}).click();
-  await expect(page.getByRole('status')).toContainText('履歴を保存できません');
+  await expect(page.getByRole('status').filter({hasText:'履歴を保存できません'})).toBeVisible();
 });
 test('JSON file upload and sample button work', async ({page})=>{
   await page.locator('input[type="file"]').setInputFiles({name:'reviewed.json',mimeType:'application/json',buffer:Buffer.from(reviewedText)});

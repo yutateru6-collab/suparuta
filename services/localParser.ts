@@ -70,7 +70,7 @@ const validatedChunks = (value: unknown): Chunk[] => {
     return { en: row.en.trim(), jp: typeof row.jp === 'string' ? row.jp.trim() : '', speaker: typeof row.speaker === 'string' && row.speaker.trim() ? row.speaker.trim() : null };
   });
 };
-const splitMarkers = new Set('and but or because although though since unless while when if whereas in on at for with by from of about between through during under into over after before without across around against among who which that whom whose what how where why'.split(' '));
+const splitMarkers = new Set('and but or because although though since unless while when if whereas in on at for with by from of about between through during under into over after before without across around against among near beside beyond toward towards who which that whom whose what how where why'.split(' '));
 const abbreviations = /^(?:Mr|Mrs|Ms|Dr|Prof|Sr|Jr|St|vs|etc|e\.g|i\.e)\.$/i;
 const punctuationEnd = (word: string) => /[,.!?;:]$/.test(word.replace(/["'”’)]*$/, '')) && !abbreviations.test(word) && !/^(?:[a-z]\.){2,}$/i.test(word);
 const normalizeWord = (word: string) => word.toLowerCase().replace(/^[^a-z]+|[^a-z]+$/g, '');
@@ -82,13 +82,12 @@ const chunkPlainText = (source: string): Chunk[] => {
   const flush = () => { if (current.length) groups.push(current); current = []; };
   for (const word of words) {
     const last = normalizeWord(current.at(-1) ?? '');
-    if (current.length >= PROMPT_MAX_WORDS || (current.length >= 5 && splitMarkers.has(normalizeWord(word)) && !cannotEnd.has(last))) flush();
+    // Twelve words is a target, not permission to strand a determiner/preposition.
+    const safe = !cannotEnd.has(last) && !splitMarkers.has(last);
+    if (safe && ((current.length >= 5 && splitMarkers.has(normalizeWord(word))) || current.length >= PROMPT_MAX_WORDS)) flush();
     current.push(word); if (punctuationEnd(word)) flush();
   }
   flush();
-  for (let i = groups.length - 1; i > 0; i--) {
-    if (groups[i].length === 1 && groups[i - 1].length === PROMPT_MAX_WORDS && !punctuationEnd(groups[i - 1].at(-1)!)) groups[i].unshift(groups[i - 1].pop()!);
-  }
   return groups.map(group => ({ en: group.join(' '), jp: '', speaker: null }));
 };
 export const parseReadingInput = (input: string): ParsedReading => {
