@@ -43,7 +43,7 @@ export const decodeQuestProgress = (raw: string | null): QuestProgress => {
   if (!value || typeof value !== 'object') throw new Error('進行データの形式が不正です。');
   const row = value as Record<string, unknown>;
   if (row.version !== 1 || !Number.isSafeInteger(row.sparks) || (row.sparks as number) < 0 ||
-    !Array.isArray(row.completed) || row.completed.length > 500 ||
+    !Array.isArray(row.completed) ||
     !row.completed.every(id => typeof id === 'string' && /^[0-9]+-[0-9a-f]+$/.test(id))) {
     throw new Error('進行データの形式が不正です。');
   }
@@ -59,7 +59,8 @@ export const finishQuest = (progress: QuestProgress, id: string): { progress: Qu
   if (progress.completed.includes(id)) return { progress, earned: 0 };
   const earned = 30;
   return {
-    progress: { version: 1, sparks: progress.sparks + earned, completed: [...progress.completed.slice(-498), id] },
+    // Completed IDs are the reward ledger, not a bounded list of recent texts.
+    progress: { version: 1, sparks: progress.sparks + earned, completed: [...progress.completed, id] },
     earned,
   };
 };

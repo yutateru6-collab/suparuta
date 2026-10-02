@@ -10,7 +10,7 @@ const source = read('../fixtures/libraries.source.txt').trim();
 const smart = read('../fixtures/libraries.smart.txt');
 // An independent, fixture-specific line extractor supplies expected values.
 // This is not the production smart-JSON normalizer.
-const expectedOriginal = smart.split('\n').flatMap(line => {
+const expectedOriginal = smart.split(/\r?\n/).flatMap(line => {
   const match = line.match(/^\{ “en”: “(.*)”, “jp”: “(.*)”, “speaker”: null \},?$/);
   return match ? [{en:match[1],jp:match[2],speaker:null}] : [];
 });

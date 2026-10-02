@@ -19,6 +19,11 @@ export const frameAtWord = (frames: DisplayFrame[], offset: number): number => {
   const index = frames.findIndex(frame => offset < frame.startWord + frame.wordCount);
   return index < 0 ? Math.max(0, frames.length - 1) : index;
 };
+/** Both the runner and checkpoints use display-frame coordinates. */
+export const checkpointPercent = (frames: DisplayFrame[], endChunk: number): number => {
+  const next = frames.findIndex(frame => frame.chunkIndex > endChunk);
+  return frames.length ? (next < 0 ? frames.length : next) / frames.length * 100 : 0;
+};
 export const frameTiming = (frame: DisplayFrame | undefined, wpm: number, delaySeconds: number, showTranslation: boolean) => {
   const speed = Number.isFinite(wpm) ? Math.min(160, Math.max(70, wpm)) : 110;
   const delayMs = showTranslation && !!frame?.chunk.jp.trim() ? Math.max(0, Math.min(7, Number.isFinite(delaySeconds) ? delaySeconds : 0)) * 1000 : 0;

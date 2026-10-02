@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { readFileSync } from 'node:fs';
-const text = readFileSync('public/libraries-of-things.reviewed.json','utf8');
+const text = readFileSync('public/libraries-of-things.reviewed.json','utf8').replace(/\r\n/g,'\n');
 const sample = JSON.parse(text);
 test.beforeEach(async({page})=>{
   await page.route('**/*', route => new URL(route.request().url()).hostname === '127.0.0.1' ? route.continue() : route.abort());

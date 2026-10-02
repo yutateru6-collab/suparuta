@@ -145,3 +145,8 @@ button:focus-visible, input:focus-visible, textarea:focus-visible, a:focus-visib
   .quest-step { width:48px; height:55px; }.quest-play { min-height:55px; }.quest-playback { gap:8px; }.quest-tool { padding:8px 10px; font-size:11px!important; }.quest-event-card .quest-mascot { width:128px; }
 }
 @media (max-height:700px) { .quest-reader-main { min-height:220px; }.quest-reading-card,.quest-event-card { min-height:240px; }.quest-route { margin:8px 0; } }
+.saved-reading-controls { display:grid; gap:8px; margin:12px 0; font-size:14px; }
+.saved-reading-controls button { justify-self:start; }
+.chunk-preview { margin:12px 0; }
+.chunk-preview textarea { width:100%; min-height:260px; padding:12px; border:2px solid #8884a9; border-radius:10px; color:inherit; background:transparent; font-size:16px; }
+.quest-shell .chunk-preview>.control,.quest-shell .saved-reading-controls>.control { background:#fff; color:var(--ink); border:2px solid var(--ink); }
